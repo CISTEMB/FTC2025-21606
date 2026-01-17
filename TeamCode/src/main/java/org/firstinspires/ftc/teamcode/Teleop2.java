@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,12 +8,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
+import org.slf4j.Logger;
 
 import java.util.Locale;
 
@@ -45,145 +48,177 @@ public class Teleop2 extends LinearOpMode {
         @Override
         public void runOpMode() throws InterruptedException {
             waitForStart();
-                if (opModeIsActive()) {
-                    lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
-                    lbMotor = hardwareMap.get(DcMotor.class, "backleft");
-                    rfMotor = hardwareMap.get(DcMotor.class, "frontright");
-                    rbMotor = hardwareMap.get(DcMotor.class, "backright");
-                    stMotor = hardwareMap.get(DcMotorEx.class, "ShooterMotor");
-                    ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
-                    jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
-                    hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
-                    inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
-                    in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
-                    odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
-                    limelight = hardwareMap.get(Limelight3A.class, "limelight");
+            if (opModeIsActive()) {
+                lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
+                lbMotor = hardwareMap.get(DcMotor.class, "backleft");
+                rfMotor = hardwareMap.get(DcMotor.class, "frontright");
+                rbMotor = hardwareMap.get(DcMotor.class, "backright");
+                stMotor = hardwareMap.get(DcMotorEx.class, "ShooterMotor");
+                ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
+                jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
+                hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
+                inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
+                in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
+                odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+                limelight = hardwareMap.get(Limelight3A.class, "limelight");
+                telemetry.setMsTransmissionInterval(11);
 
-                    telemetry.setMsTransmissionInterval(11);
+                limelight.start();
+                odo.setOffsets(4, 0, DistanceUnit.INCH);
 
-                    limelight.pipelineSwitch(0);
+            }
 
-                    /*
-                     * Starts polling for data.
-                     */
-                    limelight.start();
-                    odo.setOffsets(0, 0, DistanceUnit.MM);
+            lfMotor.setDirection(DcMotor.Direction.FORWARD);
+            lbMotor.setDirection(DcMotor.Direction.REVERSE);
+            rfMotor.setDirection(DcMotor.Direction.REVERSE);
+            rbMotor.setDirection(DcMotor.Direction.FORWARD);
+            ltMotor.setDirection(DcMotor.Direction.REVERSE);
+            jkMotor.setDirection(DcMotor.Direction.FORWARD);
 
-                }
-
-                lfMotor.setDirection(DcMotor.Direction.FORWARD);
-                lbMotor.setDirection(DcMotor.Direction.REVERSE);
-                rfMotor.setDirection(DcMotor.Direction.REVERSE);
-                rbMotor.setDirection(DcMotor.Direction.FORWARD);
-                ltMotor.setDirection(DcMotor.Direction.REVERSE);
-                jkMotor.setDirection(DcMotor.Direction.FORWARD);
-
-                lfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                lbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                rfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                rbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                stMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            lbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            stMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-                odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-                odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
-                odo.resetPosAndIMU();
-                telemetry.addData("Status", "Initialized");
-                telemetry.addData("X offset", odo.getXOffset(DistanceUnit.MM));
-                telemetry.addData("Y offset", odo.getYOffset(DistanceUnit.MM));
-                telemetry.addData("Device Version Number:", odo.getDeviceVersion());
-                telemetry.addData("Heading Scalar", odo.getYawScalar());
-                telemetry.update();
+            odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+            odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+            odo.resetPosAndIMU();
+
+            TelemetryManager panelsTelemetry = null; // Panels Telemetry instance
+
+            panelsTelemetry.debug("Status", "Initialized");
+            panelsTelemetry.debug("X offset", odo.getXOffset(DistanceUnit.MM));
+            panelsTelemetry.debug("Y offset", odo.getYOffset(DistanceUnit.MM));
+            panelsTelemetry.debug("Device Version Number:", odo.getDeviceVersion());
+            panelsTelemetry.debug("Heading Scalar", odo.getYawScalar());
+            double newTime = getRuntime();
+            double oldTime = 0;
+            double loopTime = newTime - oldTime;
+            double frequency = 1 / loopTime;
+            oldTime = newTime;
+            LLResult result = limelight.getLatestResult();
+
+                if (result.isValid()) {
+                    Pose3D botpose = result.getBotpose();
+                    panelsTelemetry.debug("tx", result.getTx());
+                    panelsTelemetry.debug("ty", result.getTy());
+                    panelsTelemetry.debug("ta", result.getTa());
+                    panelsTelemetry.debug("Botpose", botpose.toString());
+                    panelsTelemetry.debug("RPM", stMotor.getVelocity());
+                    panelsTelemetry.update(telemetry);
+
+                }  if (result != null) {
+                Pose2D pos = odo.getPosition();
+                String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
+                panelsTelemetry.debug("Position", data);
+                panelsTelemetry.debug("RPM", stMotor.getVelocity());
+
+                String velocity = String.format(Locale.US, "{XVel: %.3f, YVel: %.3f, HVel: %.3f}", odo.getVelX(DistanceUnit.MM), odo.getVelY(DistanceUnit.MM), odo.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES));
+                panelsTelemetry.debug("Velocity", velocity);
+
+                panelsTelemetry.debug("Status", odo.getDeviceStatus());
+
+                panelsTelemetry.debug("Pinpoint Frequency", odo.getFrequency()); //prints/gets the current refresh rate of the Pinpoint
+
+                panelsTelemetry.debug("REV Hub Frequency: ", frequency); //prints the control system refresh rate
+                panelsTelemetry.update(telemetry);
+            }
+            odo.update();
 
 
-                while (opModeIsActive()) {
+            oldTime = 0;
+            while (opModeIsActive()) {
 
-                    gamepad1.left_stick_y = gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y);
-                    gamepad1.left_stick_x = gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x);
+                gamepad1.left_stick_y = gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y);
+                gamepad1.left_stick_x = gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x);
 
-                    gamepad1.right_stick_x = gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x);
-                    double y = -gamepad1.left_stick_y;
-                    double x = gamepad1.left_stick_x;
-                    double oldTime = 0;
-                    double turn = gamepad1.right_stick_x;
+                gamepad1.right_stick_x = gamepad1.right_stick_x * Math.abs(gamepad1.right_stick_x);
+                double y = -gamepad1.left_stick_y;
+                double x = gamepad1.left_stick_x;
+                oldTime = 0;
+                double turn = gamepad1.right_stick_x;
 
-                    double denominater = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(x) + Math.abs(turn), 1);
+                double denominater = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(x) + Math.abs(turn), 1);
 
-                    lfMotor.setPower((y + x + turn) / denominater);
-                    lbMotor.setPower((y - x + turn) / denominater);
-                    rfMotor.setPower((y - x - turn) / denominater);
-                    rbMotor.setPower((y + x - turn) / denominater);
+                lfMotor.setPower((y + x + turn) / denominater);
+                lbMotor.setPower((y - x + turn) / denominater);
+                rfMotor.setPower((y - x - turn) / denominater);
+                rbMotor.setPower((y + x - turn) / denominater);
 
-                    gamepad2.left_stick_y = gamepad2.left_stick_y * gamepad1.left_stick_y;
+                gamepad2.left_stick_y = gamepad2.left_stick_y * gamepad1.left_stick_y;
 
-                    double lift = -gamepad2.right_stick_y;
-                    double shoot = gamepad2.left_stick_x;
+                double lift = -gamepad2.right_stick_y;
+                double shoot = gamepad2.left_stick_x;
 
 
-                    ltMotor.setPower(lift);
-                    jkMotor.setPower(lift);
+                ltMotor.setPower(lift);
+                jkMotor.setPower(lift);
 
-                    stMotor.setPower(shoot);
+                // stMotor.setVelocity(6000);
+                if (gamepad1.left_bumper) {
                     inMotor.setPower(1);
-                    if (gamepad2.y) {
+                } else if (gamepad1.right_bumper) {
+                    inMotor.setPower(-1);
+                } else {
+                    inMotor.setPower(0);
+                }
+                if (result.getTa()<50) {
+                    if (gamepad2.left_bumper) {
                         stMotor.setPower(1);
+                    } else if (gamepad2.right_trigger > 0.4) {
+                        stMotor.setPower(-0.25);
+                    } else {
+                        stMotor.setPower(0);
                     }
-                    if (!gamepad2.y) {
-                        hdMotor.setPower(0);
+                } else if (result.getTa() > 50) {
+                    if (gamepad2.left_bumper) {
+                        stMotor.setPower(0.75);
+                    } else if (gamepad2.right_trigger > 0.4) {
+                            stMotor.setPower(-0.25);
                     }
-                    if (gamepad2.x) {
-                        in2Motor.setPower(-1);
+                }
+                  else if (gamepad2.left_trigger > 0.4) {
+                        stMotor.setPower(1);
+                    } else if (gamepad2.right_trigger > 0.4) {
+                        stMotor.setPower(-0.25);
+                    } else {
+                        stMotor.setPower(0);
                     }
-                    if (!gamepad2.x) {
-                        in2Motor.setPower(0);
-                    }
-                    if (gamepad2.dpad_down) {
-                        hdMotor.setPower(-1);
-                    }
-                    if (!gamepad2.dpad_down) {
-                        hdMotor.setPower(0);
-                    }
-                    if (gamepad2.dpad_up) {
-                        hdMotor.setPower(1);
-                    }
-                    if (!gamepad2.dpad_up) {
-                        hdMotor.setPower(0);
-                    }
-
-                    LLResult result = limelight.getLatestResult();
-                    if (result != null) {
-                        if (result.isValid()) {
-                            Pose3D botpose = result.getBotpose();
-                            telemetry.addData("tx", result.getTx());
-                            telemetry.addData("ty", result.getTy());
-                            telemetry.addData("Botpose", botpose.toString());
-                            telemetry.update()
-                            ;
-                        }
-                    }
-                    odo.update();
-
-                    double newTime = getRuntime();
-                    double loopTime = newTime - oldTime;
-                    double frequency = 1 / loopTime;
-                    oldTime = newTime;
-
-
-                    Pose2D pos = odo.getPosition();
-                    String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
-                    telemetry.addData("Position", data);
-
-                    String velocity = String.format(Locale.US, "{XVel: %.3f, YVel: %.3f, HVel: %.3f}", odo.getVelX(DistanceUnit.MM), odo.getVelY(DistanceUnit.MM), odo.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES));
-                    telemetry.addData("Velocity", velocity);
-
-                    telemetry.addData("Status", odo.getDeviceStatus());
-
-                    telemetry.addData("Pinpoint Frequency", odo.getFrequency()); //prints/gets the current refresh rate of the Pinpoint
-
-                    telemetry.addData("REV Hub Frequency: ", frequency); //prints the control system refresh rate
-                    telemetry.update();
-
+                if (gamepad2.x) {
+                    in2Motor.setPower(1);
+                } else if (gamepad2.y) {
+                    in2Motor.setPower(-1);
+                } else {
+                    in2Motor.setPower(0);
+                }
+                if (gamepad2.dpad_down) {
+                    hdMotor.setPower(-1);
+                } else if (gamepad2.dpad_up) {
+                    hdMotor.setPower(1);
+                } else {
+                    hdMotor.setPower(0);
                 }
             }
+            if (gamepad2.x) {
+                in2Motor.setPower(1);
+            } else if (gamepad2.y) {
+                in2Motor.setPower(-1);
+            } else {
+                in2Motor.setPower(0);
+            }
+            if (gamepad2.dpad_down) {
+                hdMotor.setPower(-1);
+            } else if (gamepad2.dpad_up) {
+                hdMotor.setPower(1);
+            } else {
+                hdMotor.setPower(0);
+            }
+
+
+
         }
+            }
+
 
