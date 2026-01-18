@@ -427,6 +427,7 @@ public class GoBildaPinpointDriver extends I2cDeviceSynchDevice<I2cDeviceSynchSi
      * If you're using goBILDA odometry pods, the ticks-per-mm values are stored here for easy access.<br><br>
      * @param pods goBILDA_SWINGARM_POD or goBILDA_4_BAR_POD
      */
+
     public void setEncoderResolution(GoBildaOdometryPods pods){
         if (pods == GoBildaOdometryPods.goBILDA_SWINGARM_POD) {
             writeByteArray(Register.MM_PER_TICK, (floatToByteArray(goBILDA_SWINGARM_POD, ByteOrder.LITTLE_ENDIAN)));

@@ -42,11 +42,12 @@ public class Teleop2 extends LinearOpMode {
     private CRServo hdMotor;
     private CRServo in2Motor;
     private Limelight3A limelight;
+    //public TelemetryManager panelsTelemetry;
     GoBildaPinpointDriver odo;
 
 
         @Override
-        public void runOpMode() throws InterruptedException {
+        public void runOpMode()  {
             waitForStart();
             if (opModeIsActive()) {
                 lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
@@ -72,7 +73,7 @@ public class Teleop2 extends LinearOpMode {
             lbMotor.setDirection(DcMotor.Direction.REVERSE);
             rfMotor.setDirection(DcMotor.Direction.REVERSE);
             rbMotor.setDirection(DcMotor.Direction.FORWARD);
-            ltMotor.setDirection(DcMotor.Direction.REVERSE);
+            ltMotor.setDirection(DcMotor.Direction.FORWARD);
             jkMotor.setDirection(DcMotor.Direction.FORWARD);
 
             lfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -86,50 +87,54 @@ public class Teleop2 extends LinearOpMode {
             odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
             odo.resetPosAndIMU();
 
-            TelemetryManager panelsTelemetry = null; // Panels Telemetry instance
 
-            panelsTelemetry.debug("Status", "Initialized");
-            panelsTelemetry.debug("X offset", odo.getXOffset(DistanceUnit.MM));
-            panelsTelemetry.debug("Y offset", odo.getYOffset(DistanceUnit.MM));
-            panelsTelemetry.debug("Device Version Number:", odo.getDeviceVersion());
-            panelsTelemetry.debug("Heading Scalar", odo.getYawScalar());
-            double newTime = getRuntime();
-            double oldTime = 0;
-            double loopTime = newTime - oldTime;
-            double frequency = 1 / loopTime;
-            oldTime = newTime;
-            LLResult result = limelight.getLatestResult();
+
+
+
+
+
+            while (opModeIsActive()) {
+                telemetry.addData("Status", "Initialized");
+                telemetry.addData("X offset", odo.getXOffset(DistanceUnit.MM));
+                telemetry.addData("Y offset", odo.getYOffset(DistanceUnit.MM));
+                telemetry.addData("Device Version Number:", odo.getDeviceVersion());
+                telemetry.addData("Heading Scalar", odo.getYawScalar());
+                double newTime = getRuntime();
+                double oldTime = 0;
+                double loopTime = newTime - oldTime;
+                double frequency = 1 / loopTime;
+                oldTime = newTime;
+
+                LLResult result = limelight.getLatestResult();
 
                 if (result.isValid()) {
                     Pose3D botpose = result.getBotpose();
-                    panelsTelemetry.debug("tx", result.getTx());
-                    panelsTelemetry.debug("ty", result.getTy());
-                    panelsTelemetry.debug("ta", result.getTa());
-                    panelsTelemetry.debug("Botpose", botpose.toString());
-                    panelsTelemetry.debug("RPM", stMotor.getVelocity());
-                    panelsTelemetry.update(telemetry);
+                    telemetry.addData("tx", result.getTx());
+                    telemetry.addData("ty", result.getTy());
+                    telemetry.addData("ta", result.getTa());
+                    telemetry.addData("Botpose", botpose.toString());
+                    telemetry.addData("RPM", stMotor.getVelocity());
+                    telemetry.update();
 
-                }  if (result != null) {
-                Pose2D pos = odo.getPosition();
-                String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
-                panelsTelemetry.debug("Position", data);
-                panelsTelemetry.debug("RPM", stMotor.getVelocity());
+                }  else {
+                    Pose2D pos = odo.getPosition();
+                    String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.DEGREES));
+                    telemetry.addData("Position", data);
+                    telemetry.addData("RPM", stMotor.getVelocity());
 
-                String velocity = String.format(Locale.US, "{XVel: %.3f, YVel: %.3f, HVel: %.3f}", odo.getVelX(DistanceUnit.MM), odo.getVelY(DistanceUnit.MM), odo.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES));
-                panelsTelemetry.debug("Velocity", velocity);
+                    String velocity = String.format(Locale.US, "{XVel: %.3f, YVel: %.3f, HVel: %.3f}", odo.getVelX(DistanceUnit.MM), odo.getVelY(DistanceUnit.MM), odo.getHeadingVelocity(UnnormalizedAngleUnit.DEGREES));
+                    telemetry.addData("Velocity", velocity);
 
-                panelsTelemetry.debug("Status", odo.getDeviceStatus());
+                    telemetry.addData("Status", odo.getDeviceStatus());
 
-                panelsTelemetry.debug("Pinpoint Frequency", odo.getFrequency()); //prints/gets the current refresh rate of the Pinpoint
+                    telemetry.addData("Pinpoint Frequency", odo.getFrequency()); //prints/gets the current refresh rate of the Pinpoint
 
-                panelsTelemetry.debug("REV Hub Frequency: ", frequency); //prints the control system refresh rate
-                panelsTelemetry.update(telemetry);
-            }
-            odo.update();
+                    telemetry.update();
+                }
+                odo.update();
 
+                oldTime = 0;
 
-            oldTime = 0;
-            while (opModeIsActive()) {
 
                 gamepad1.left_stick_y = gamepad1.left_stick_y * Math.abs(gamepad1.left_stick_y);
                 gamepad1.left_stick_x = gamepad1.left_stick_x * Math.abs(gamepad1.left_stick_x);
@@ -149,7 +154,7 @@ public class Teleop2 extends LinearOpMode {
 
                 gamepad2.left_stick_y = gamepad2.left_stick_y * gamepad1.left_stick_y;
 
-                double lift = -gamepad2.right_stick_y;
+                double lift = gamepad2.right_stick_y;
                 double shoot = gamepad2.left_stick_x;
 
 
@@ -158,13 +163,13 @@ public class Teleop2 extends LinearOpMode {
 
                 // stMotor.setVelocity(6000);
                 if (gamepad1.left_bumper) {
-                    inMotor.setPower(1);
+                    inMotor.setPower(-1);
                 } else if (gamepad1.right_bumper) {
                     inMotor.setPower(-1);
                 } else {
                     inMotor.setPower(0);
                 }
-                if (result.getTa()<50) {
+                if (result.getTa()<0.4) {
                     if (gamepad2.left_bumper) {
                         stMotor.setPower(1);
                     } else if (gamepad2.right_trigger > 0.4) {
@@ -172,24 +177,25 @@ public class Teleop2 extends LinearOpMode {
                     } else {
                         stMotor.setPower(0);
                     }
-                } else if (result.getTa() > 50) {
+                } else if (result.getTa() > 0.4) {
                     if (gamepad2.left_bumper) {
-                        stMotor.setPower(0.75);
+                        stMotor.setPower(0.05);
                     } else if (gamepad2.right_trigger > 0.4) {
                             stMotor.setPower(-0.25);
                     }
                 }
-                  else if (gamepad2.left_trigger > 0.4) {
-                        stMotor.setPower(1);
-                    } else if (gamepad2.right_trigger > 0.4) {
+                 // else if (gamepad2.left_trigger > 0.4) {
+                        //stMotor.setPower(1);}
+                //
+                else if (gamepad2.right_trigger > 0.4) {
                         stMotor.setPower(-0.25);
                     } else {
                         stMotor.setPower(0);
                     }
                 if (gamepad2.x) {
-                    in2Motor.setPower(1);
-                } else if (gamepad2.y) {
                     in2Motor.setPower(-1);
+                } else if (gamepad2.y) {
+                    in2Motor.setPower(1);
                 } else {
                     in2Motor.setPower(0);
                 }
@@ -204,7 +210,7 @@ public class Teleop2 extends LinearOpMode {
             if (gamepad2.x) {
                 in2Motor.setPower(1);
             } else if (gamepad2.y) {
-                in2Motor.setPower(-1);
+                in2Motor.setPower(1);
             } else {
                 in2Motor.setPower(0);
             }
