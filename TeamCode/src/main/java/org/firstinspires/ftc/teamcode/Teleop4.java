@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -8,22 +7,18 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
-import org.slf4j.Logger;
 
 import java.util.Locale;
 
 
-
-
-@TeleOp(name = "Teleop2")
-public class Teleop2 extends LinearOpMode {
+@TeleOp(name = "Teleop4")
+public class Teleop4 extends LinearOpMode {
     //gamepad1
     private DcMotor lfMotor;
     private DcMotor lbMotor;
@@ -149,22 +144,25 @@ public class Teleop2 extends LinearOpMode {
             } else {
                 inMotor.setPower(0);
             }
-            //if (result.getTa() < 0.4) {
-            if (gamepad2.left_bumper) {
-                stMotor.setVelocity(802.879);
-
-            }
-            else if (gamepad2.left_trigger >0.4) {
-                stMotor.setVelocity(1548.3185);
-            }
-
-            else if (gamepad2.right_trigger > 0.4) {
-                stMotor.setPower(-0.25);
-            }
-               else {
+            if (result.getTa() < 0.4) {
+                if (gamepad2.left_bumper) {
+                    stMotor.setVelocity(1548.3185);
+                }
+                else if (gamepad2.right_trigger > 0.4) {
+                    stMotor.setPower(-0.25);
+                } else {
                     stMotor.setPower(0);
                 }
-
+            }
+            if (result.getTa() > 0.4) {
+                if (gamepad2.left_bumper) {
+                    stMotor.setVelocity(802.879);
+                } else if (gamepad2.right_trigger > 0.4) {
+                    stMotor.setPower(-0.25);
+                } else {
+                    stMotor.setPower(0);
+                }
+            }
 
                 if (gamepad1.x) {
                     in2Motor.setPower(-1);
