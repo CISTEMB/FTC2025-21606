@@ -1,68 +1,67 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.geometry.BezierLine;
-import com.pedropathing.geometry.PedroCoordinates;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.eventloop.opmode.*;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.nio.file.Paths;
 
-@Autonomous(name = "PedroAutonomous")
-public class Autotest extends LinearOpMode {
-    //gamepad1
-    private DcMotor lfMotor;
-    private DcMotor lbMotor;
-    private DcMotor rfMotor;
-    private DcMotor rbMotor;
-    //gamepad2
-    private DcMotor stMotor;
-    private DcMotor ltMotor;
-    private DcMotor inMotor;
-    private DcMotor jkMotor;
-    private CRServo hdMotor;
+@Autonomous(name = "AutoBlueDown")
+public class AutoBlueDown extends LinearOpMode {
+
+
     private Limelight3A limelight;
-    private Follower follower;
-    private boolean following = false;
     public TelemetryManager panelsTelemetry; // Panels Telemetry instance
     private int pathState; // Current autonomous path state (state machine)
     private Paths paths; // Paths defined in the Paths class
     private final Pose Target_Location = new Pose(72, 78);
     GoBildaPinpointDriver odo;
-
+    private DcMotor jkMotor;
+    private DcMotor ltMotor;
+    private DcMotor lfMotor;
+    private DcMotor lbMotor;
+    private DcMotor rfMotor;
+    private DcMotor rbMotor;
+    private DcMotorEx stMotor;
+    private CRServo in2Motor;
+    private DcMotor inMotor;
+    private CRServo hdMotor;
+    ElapsedTime runtime;
     @Override
 
     public void runOpMode() {
+
         waitForStart();
         if (opModeIsActive()) {
             lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
             lbMotor = hardwareMap.get(DcMotor.class, "backleft");
             rfMotor = hardwareMap.get(DcMotor.class, "frontright");
             rbMotor = hardwareMap.get(DcMotor.class, "backright");
-            stMotor = hardwareMap.get(DcMotor.class, "ShooterMotor");
+            stMotor = hardwareMap.get(DcMotorEx.class, "ShooterMotor");
             ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
             jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
             hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
+            in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
             odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
-            telemetry.setMsTransmissionInterval(11);
+            panelsTelemetry.debug(11);
 
             limelight.pipelineSwitch(0);
 
@@ -84,7 +83,7 @@ public class Autotest extends LinearOpMode {
             lbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            stMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            stMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
             odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
@@ -100,7 +99,7 @@ public class Autotest extends LinearOpMode {
         while (opModeIsActive()) { {
                 panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
-                follower = Constants.createFollower(hardwareMap);
+            Follower follower = Constants.createFollower(hardwareMap);
                 follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
 
                 //paths = new Paths(follower); // Build paths
@@ -112,7 +111,8 @@ public class Autotest extends LinearOpMode {
                 follower.update(); // Update Pedro Pathing
 
 
-                if (!following) {
+            boolean following = false;
+            if (!following) {
                     follower.followPath(
                             follower.pathBuilder()
                                     .addPath(new BezierLine(follower.getPose(), Target_Location))
@@ -140,13 +140,30 @@ public class Autotest extends LinearOpMode {
                  public Paths(Follower follower) {
                     Path1 = follower.pathBuilder().addPath(
                                     new BezierLine(
-                                            new Pose(),
+                                            new Pose(56,36),
 
                                             new Pose(72,78)
                                     )
                             ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
 
                             .build();
+                    stMotor.setVelocity(802.879);
+
+
+                     if (runtime.seconds() > 8) {
+                        in2Motor.setPower(1);
+                    }
+                     PathChain Path2;
+
+                     if (runtime.seconds() > 15) {
+                         Path2 = follower.pathBuilder().addPath(
+                                 new BezierLine(
+                                         new Pose(72,78),
+
+                                         new Pose(72,98)
+                                 )
+                         ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180)).build();
+                     }
                 }
             }
 

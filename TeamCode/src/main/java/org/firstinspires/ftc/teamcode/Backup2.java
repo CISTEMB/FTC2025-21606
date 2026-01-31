@@ -21,7 +21,7 @@ public class Backup2 extends LinearOpMode {
     private CRServo hdMotor;
     private CRServo in2Motor;
     @Override
-    public void runOpMode() {
+    public void runOpMode() throws InterruptedException {
         waitForStart();
         if (opModeIsActive()) {
             lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
@@ -58,6 +58,7 @@ public class Backup2 extends LinearOpMode {
                 rfMotor.setPower(1);
                 rbMotor.setPower(1);
                 stMotor.setPower(0.7);
+                wait( 5);
                 in2Motor.setPower(1);
             }
 
