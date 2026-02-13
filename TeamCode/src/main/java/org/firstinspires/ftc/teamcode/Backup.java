@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.*;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "Backup")
@@ -13,25 +12,21 @@ public class Backup extends LinearOpMode {
     private DcMotor lbMotor;
     private DcMotor rfMotor;
     private DcMotor rbMotor;
-    //gamepad2
-    private DcMotor stMotor;
-    private DcMotor ltMotor;
-    private DcMotor inMotor;
-    private DcMotor jkMotor;
-    private CRServo   hdMotor;
+
     @Override
     public void runOpMode() {
         waitForStart();
         if (opModeIsActive()) {
-            lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
-            lbMotor = hardwareMap.get(DcMotor.class, "backleft");
-            rfMotor = hardwareMap.get(DcMotor.class, "frontright");
-            rbMotor = hardwareMap.get(DcMotor.class, "backright");
-            stMotor = hardwareMap.get(DcMotor.class, "ShooterMotor");
-            ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
-            jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
-            hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
-            inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
+            lfMotor = hardwareMap.get(DcMotor.class, "front-left");
+            lbMotor = hardwareMap.get(DcMotor.class, "back-left");
+            rfMotor = hardwareMap.get(DcMotor.class, "front-right");
+            rbMotor = hardwareMap.get(DcMotor.class, "back-right");
+            //gamepad2
+            DcMotor stMotor = hardwareMap.get(DcMotor.class, "ShooterMotor");
+            DcMotor ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
+            DcMotor jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
+            CRServo hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
+            DcMotor inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
 
 
             lfMotor.setDirection(DcMotor.Direction.REVERSE);

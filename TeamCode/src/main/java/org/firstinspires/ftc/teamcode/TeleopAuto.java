@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import com.bylazar.gamepad.PanelsGamepad;
+import static java.lang.Math.tan;
+
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.limelightvision.LLResult;
@@ -21,11 +22,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit
 
 import java.util.Locale;
 
-import lombok.val;
 
 
-@TeleOp(name = "Teleop4")
-public class Teleop4 extends LinearOpMode {
+@TeleOp(name = "TeleopAuto")
+public class TeleopAuto extends LinearOpMode {
     //gamepad1
     private DcMotor lfMotor;
     private DcMotor lbMotor;
@@ -47,23 +47,23 @@ public class Teleop4 extends LinearOpMode {
 
     TelemetryManager panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
-    GoBildaPinpointDriver odo;
+    GoBaldaPinpointDriver odo;
 
         @Override
     public void runOpMode() {
         waitForStart();
         if (opModeIsActive()) {
-            lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
-            lbMotor = hardwareMap.get(DcMotor.class, "backleft");
-            rfMotor = hardwareMap.get(DcMotor.class, "frontright");
-            rbMotor = hardwareMap.get(DcMotor.class, "backright");
+            lfMotor = hardwareMap.get(DcMotor.class, "front-left");
+            lbMotor = hardwareMap.get(DcMotor.class, "back-left");
+            rfMotor = hardwareMap.get(DcMotor.class, "front-right");
+            rbMotor = hardwareMap.get(DcMotor.class, "back-right");
             stMotor = hardwareMap.get(DcMotorEx.class, "ShooterMotor");
             ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
             jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
             hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
-            odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+            odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
             panelsTelemetry.debug(11);
 
@@ -87,20 +87,24 @@ public class Teleop4 extends LinearOpMode {
         stMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBaldaPinpointDriver.EncoderDirection.FORWARD, GoBaldaPinpointDriver.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
 
 
         while (opModeIsActive()) {
-
             LLResult result = limelight.getLatestResult();
+            double h2 = 29.5;
+            double h1 = 12.7127;
+            double a2 = 21.9714;
+            double a1 = result.getTy();
+            double d = (h2 - h1) / tan((a1 + a2) * 0.017453292519943295);
             if (result.isValid()) {
                 Pose3D botpose = result.getBotpose();
+                panelsTelemetry.debug("Distance", d);
                 panelsTelemetry.debug("tx", result.getTx());
                 panelsTelemetry.debug("ty", result.getTy());
-                panelsTelemetry.debug("ta", result.getTa());
-                panelsTelemetry.debug("Botpose", botpose.toString());
+                panelsTelemetry.debug("Bot pose", botpose.toString());
                 panelsTelemetry.debug("AngularVelocity", stMotor.getVelocity());
                 panelsTelemetry.update(telemetry);
 
@@ -109,14 +113,9 @@ public class Teleop4 extends LinearOpMode {
                 String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.RADIANS));
                 panelsTelemetry.debug("Position", data);
                 panelsTelemetry.debug("RPM", stMotor.getVelocity());
-
                 String velocity = String.format(Locale.US, "{XVel: %.3f, YVel: %.3f, HVel: %.3f}", odo.getVelX(DistanceUnit.MM), odo.getVelY(DistanceUnit.MM), odo.getHeadingVelocity(UnnormalizedAngleUnit.RADIANS));
                 panelsTelemetry.debug("Velocity", velocity);
-
                 panelsTelemetry.debug("Status", odo.getDeviceStatus());
-
-                panelsTelemetry.debug("Pinpoint Frequency", odo.getFrequency()); //prints/gets the current refresh rate of the Pinpoint
-
                 panelsTelemetry.update(telemetry);
             }
             odo.update();
@@ -129,14 +128,14 @@ public class Teleop4 extends LinearOpMode {
             double x = gamepad1.left_stick_x;
             double turn = gamepad1.right_stick_x;
 
-            double denominater;
-            denominater = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(x) + Math.abs(turn), 1);
+            double denominate;
+            denominate = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(x) + Math.abs(turn), 1);
 
-            lfMotor.setPower((y + x + turn) / denominater);
-            lbMotor.setPower((y - x + turn) / denominater);
-            rfMotor.setPower((y - x - turn) / denominater);
+            lfMotor.setPower((y + x + turn) / denominate);
+            lbMotor.setPower((y - x + turn) / denominate);
+            rfMotor.setPower((y - x - turn) / denominate);
 
-            rbMotor.setPower((y + x - turn) / denominater);
+            rbMotor.setPower((y + x - turn) / denominate);
 
 
             ltMotor.setPower(gamepad2.right_stick_y);
@@ -208,7 +207,10 @@ public class Teleop4 extends LinearOpMode {
 
 
         }
+
+
     }
+
 
 
 

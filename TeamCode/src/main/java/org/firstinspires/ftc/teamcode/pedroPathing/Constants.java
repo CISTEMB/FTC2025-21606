@@ -1,8 +1,5 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
-import static org.firstinspires.ftc.teamcode.GoBildaPinpointDriver.*;
-import static org.firstinspires.ftc.teamcode.GoBildaPinpointDriver.GoBildaOdometryPods.*;
-
 import com.pedropathing.follower.Follower;
 import com.pedropathing.follower.FollowerConstants;
 import com.pedropathing.ftc.FollowerBuilder;
@@ -13,9 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
-import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver;
-import org.firstinspires.ftc.teamcode.GoBildaPinpointDriver.EncoderDirection;
 
 public class Constants {
     public static PinpointConstants localizerConstants = new PinpointConstants()
@@ -31,10 +25,10 @@ public class Constants {
     .mass(12);
     public static MecanumConstants driveConstants = new MecanumConstants()
             .maxPower(1)
-            .rightFrontMotorName("frontright")
-            .rightRearMotorName("backright")
-            .leftRearMotorName("backleft")
-            .leftFrontMotorName("frontleft")
+            .rightFrontMotorName("front-right")
+            .rightRearMotorName("back-right")
+            .leftRearMotorName("back-left")
+            .leftFrontMotorName("front-left")
             .leftFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
             .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
             .rightFrontMotorDirection(DcMotorSimple.Direction.REVERSE)

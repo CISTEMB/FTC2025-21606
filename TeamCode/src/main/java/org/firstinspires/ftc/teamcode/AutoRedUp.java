@@ -30,17 +30,9 @@ public class AutoRedUp extends LinearOpMode {
     private int pathState; // Current autonomous path state (state machine)
     private Paths paths; // Paths defined in the Paths class
     private final Pose Target_Location = new Pose(72, 78);
-    GoBildaPinpointDriver odo;
-    private DcMotor jkMotor;
-    private DcMotor ltMotor;
-    private DcMotor lfMotor;
-    private DcMotor lbMotor;
-    private DcMotor rfMotor;
-    private DcMotor rbMotor;
+    GoBaldaPinpointDriver odo;
     private DcMotorEx stMotor;
     private CRServo in2Motor;
-    private DcMotor inMotor;
-    private CRServo hdMotor;
     ElapsedTime runtime;
     @Override
 
@@ -48,17 +40,17 @@ public class AutoRedUp extends LinearOpMode {
 
         waitForStart();
         if (opModeIsActive()) {
-            lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
-            lbMotor = hardwareMap.get(DcMotor.class, "backleft");
-            rfMotor = hardwareMap.get(DcMotor.class, "frontright");
-            rbMotor = hardwareMap.get(DcMotor.class, "backright");
+            DcMotor lfMotor = hardwareMap.get(DcMotor.class, "front-left");
+            DcMotor lbMotor = hardwareMap.get(DcMotor.class, "back-left");
+            DcMotor rfMotor = hardwareMap.get(DcMotor.class, "front-right");
+            DcMotor rbMotor = hardwareMap.get(DcMotor.class, "back-right");
             stMotor = hardwareMap.get(DcMotorEx.class, "ShooterMotor");
-            ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
-            jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
-            hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
-            inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
+            DcMotor ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
+            DcMotor jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
+            CRServo hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
+            DcMotor inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
-            odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+            odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
             panelsTelemetry.debug(11);
@@ -86,8 +78,8 @@ public class AutoRedUp extends LinearOpMode {
             stMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-            odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-            odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+            odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
+            odo.setEncoderDirections(GoBaldaPinpointDriver.EncoderDirection.FORWARD, GoBaldaPinpointDriver.EncoderDirection.FORWARD);
             odo.resetPosAndIMU();
             telemetry.addData("Status", "Initialized");
             telemetry.addData("X offset", odo.getXOffset(DistanceUnit.MM));
@@ -135,7 +127,7 @@ public class AutoRedUp extends LinearOpMode {
 
 
              class Paths {
-                public PathChain Path1;
+                public final PathChain Path1;
 
                  public Paths(Follower follower) {
                     Path1 = follower.pathBuilder().addPath(
@@ -156,11 +148,11 @@ public class AutoRedUp extends LinearOpMode {
                      PathChain Path2;
 
                      if (runtime.seconds() > 15) {
-                         Path2 = follower.pathBuilder().addPath(
+                         follower.pathBuilder().addPath(
                                  new BezierLine(
-                                         new Pose(72,78),
+                                         new Pose(72, 78),
 
-                                         new Pose(72,98)
+                                         new Pose(72, 98)
                                  )
                          ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180)).build();
                      }

@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 
 @TeleOp(name = "Teleop1")
-public abstract class Teleop1 extends LinearOpMode {
+public abstract class TeleopIDK extends LinearOpMode {
     //gamepad1
     private DcMotor lfMotor;
     private DcMotor lbMotor;
@@ -28,13 +28,14 @@ public abstract class Teleop1 extends LinearOpMode {
     private DcMotor jkMotor;
     private CRServo hdMotor;
     private Limelight3A limelight;
-    GoBildaPinpointDriver odo;
+    GoBaldaPinpointDriver odo;
 
 
 
-    public class SensorGoBildaPinpointExample extends LinearOpMode {
+    @TeleOp(name = "SensorGoBaldaPinpointExample")
+    public class SensorGoBaldaPinpointExample extends LinearOpMode {
 
-        GoBildaPinpointDriver odo;
+        GoBaldaPinpointDriver odo;
 
 
         @Override
@@ -42,16 +43,16 @@ public abstract class Teleop1 extends LinearOpMode {
 
                 waitForStart();
                 if (opModeIsActive()) {
-                    lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
-                    lbMotor = hardwareMap.get(DcMotor.class, "backleft");
-                    rfMotor = hardwareMap.get(DcMotor.class, "frontright");
-                    rbMotor = hardwareMap.get(DcMotor.class, "backright");
+                    lfMotor = hardwareMap.get(DcMotor.class, "front-left");
+                    lbMotor = hardwareMap.get(DcMotor.class, "back-left");
+                    rfMotor = hardwareMap.get(DcMotor.class, "front-right");
+                    rbMotor = hardwareMap.get(DcMotor.class, "back-right");
                     stMotor = hardwareMap.get(DcMotor.class, "ShooterMotor");
                     ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
                     jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
                     hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
                     inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
-                    odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+                    odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
                     limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
                     telemetry.setMsTransmissionInterval(11);
@@ -80,8 +81,8 @@ public abstract class Teleop1 extends LinearOpMode {
                 stMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-                odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-                odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+                odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
+                odo.setEncoderDirections(GoBaldaPinpointDriver.EncoderDirection.FORWARD, GoBaldaPinpointDriver.EncoderDirection.FORWARD);
                 odo.resetPosAndIMU();
                 telemetry.addData("Status", "Initialized");
                 telemetry.addData("X offset", odo.getXOffset(DistanceUnit.MM));
@@ -102,12 +103,12 @@ public abstract class Teleop1 extends LinearOpMode {
                     double oldTime = 0;
                     double turn = gamepad1.right_stick_x;
 
-                    double denominater = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(x) + Math.abs(turn), 1);
+                    double denominate = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(x) + Math.abs(turn), 1);
 
-                    lfMotor.setPower((y + x + turn) / denominater);
-                    lbMotor.setPower((y - x + turn) / denominater);
-                    rfMotor.setPower((y - x - turn) / denominater);
-                    rbMotor.setPower((y + x - turn) / denominater);
+                    lfMotor.setPower((y + x + turn) / denominate);
+                    lbMotor.setPower((y - x + turn) / denominate);
+                    rfMotor.setPower((y - x - turn) / denominate);
+                    rbMotor.setPower((y + x - turn) / denominate);
 
                     gamepad2.left_stick_y = gamepad2.left_stick_y * gamepad1.left_stick_y;
 
@@ -155,7 +156,6 @@ public abstract class Teleop1 extends LinearOpMode {
                     double newTime = getRuntime();
                     double loopTime = newTime - oldTime;
                     double frequency = 1 / loopTime;
-                    oldTime = newTime;
 
 
                     Pose2D pos = odo.getPosition();

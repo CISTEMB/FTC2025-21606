@@ -1,35 +1,26 @@
 package org.firstinspires.ftc.teamcode;
 
 
-import static org.firstinspires.ftc.teamcode.ProjectileCalculator.calculateLaunchAngle;
-
-import static java.lang.Math.min;
-
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.util.Network;
 
-import org.firstinspires.ftc.teamcode.ProjectileCalculator;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import java.lang.Math;
 
 import java.util.Locale;
 
 
 @TeleOp(name = "Teleop3")
-public class Teleop3 extends LinearOpMode {
+public class Teleopnull extends LinearOpMode {
     //gamepad1
     private DcMotor lfMotor;
     private DcMotor lbMotor;
@@ -43,7 +34,7 @@ public class Teleop3 extends LinearOpMode {
     private CRServo hdMotor;
     private CRServo in2Motor;
     private Limelight3A limelight;
-    GoBildaPinpointDriver odo;
+    GoBaldaPinpointDriver odo;
 
 
 
@@ -51,17 +42,17 @@ public class Teleop3 extends LinearOpMode {
         public void runOpMode() throws InterruptedException {
             waitForStart();
                 if (opModeIsActive()) {
-                    lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
-                    lbMotor = hardwareMap.get(DcMotor.class, "backleft");
-                    rfMotor = hardwareMap.get(DcMotor.class, "frontright");
-                    rbMotor = hardwareMap.get(DcMotor.class, "backright");
+                    lfMotor = hardwareMap.get(DcMotor.class, "front-left");
+                    lbMotor = hardwareMap.get(DcMotor.class, "back-left");
+                    rfMotor = hardwareMap.get(DcMotor.class, "front-right");
+                    rbMotor = hardwareMap.get(DcMotor.class, "back-right");
                     stMotor = hardwareMap.get(DcMotor.class, "ShooterMotor");
                     ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
                     jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
                     hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
                     inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
                     in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
-                    odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
+                    odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
                     limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
                     telemetry.setMsTransmissionInterval(11);
@@ -72,7 +63,7 @@ public class Teleop3 extends LinearOpMode {
 
                 }
 
-                lfMotor.setDirection(DcMotor.Direction.FORWARD);
+                lfMotor.setDirection(DcMotorSimple.Direction.FORWARD);
                 lbMotor.setDirection(DcMotor.Direction.REVERSE);
                 rfMotor.setDirection(DcMotor.Direction.REVERSE);
                 rbMotor.setDirection(DcMotor.Direction.FORWARD);
@@ -86,8 +77,8 @@ public class Teleop3 extends LinearOpMode {
                 stMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
-                odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-                odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+                odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
+                odo.setEncoderDirections(GoBaldaPinpointDriver.EncoderDirection.FORWARD, GoBaldaPinpointDriver.EncoderDirection.FORWARD);
                 odo.resetPosAndIMU();
                 telemetry.addData("Status", "Initialized");
                 telemetry.addData("X offset", odo.getXOffset(DistanceUnit.MM));
@@ -110,24 +101,19 @@ public class Teleop3 extends LinearOpMode {
 
 
 
-                    double denominater = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(x) + Math.abs(turn), 1);
+                    double denominate = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(x) + Math.abs(turn), 1);
 
-                    lfMotor.setPower((y + x + turn) / denominater);
-                    lbMotor.setPower((y - x + turn) / denominater);
-                    rfMotor.setPower((y - x - turn) / denominater);
-                    rbMotor.setPower((y + x - turn) / denominater);
-
-                    gamepad2.left_stick_y = gamepad2.left_stick_y * gamepad1.left_stick_y;
-
-                    double lift = -gamepad2.right_stick_y;
-                    double shoot = gamepad2.left_stick_x;
+                    lfMotor.setPower((y + x + turn) / denominate);
+                    lbMotor.setPower((y - x + turn) / denominate);
+                    rfMotor.setPower((y - x - turn) / denominate);
+                    rbMotor.setPower((y + x - turn) / denominate);
 
 
 
-                    ltMotor.setPower(lift);
-                    jkMotor.setPower(lift);
 
-                    stMotor.setPower(shoot);
+
+                    ltMotor.setPower(gamepad2.left_stick_y);
+                    jkMotor.setPower(gamepad2.right_stick_y);
                     inMotor.setPower(1);
                     if (gamepad2.y) {
                         stMotor.setPower(1);
@@ -161,66 +147,7 @@ public class Teleop3 extends LinearOpMode {
                     if (result != null) {
                         if (result.isValid()) {
                             Pose3D botpose = result.getBotpose_MT2();
-                            double distance = tagdistance(result.getTa());
-
-                             class ProjectileCalculator {
-
-                                private static final double GRAVITY = 9.81;
-
-                                /**
-                                 * Calculates the necessary launch angle (in radians) to reach a specific horizontal distance and vertical height.
-                                 *
-                                 * @param initialVelocity The initial speed of the projectile (m/s).
-                                 * @param distance The horizontal distance to the target (m).
-                                 * @param distanceY The vertical height to the target (m), relative to launch height.
-                                 * @return The launch angle in radians, or NaN if the target is unreachable.
-                                 */
-                                public double calculateLaunchAngle; {
-
-                                    double vSquared = 6.408849013323178 * 6.408849013323178;
-                                    double vQuad = Math.pow(6.408849013323178, 4);
-                                    double gravitySquared = GRAVITY * GRAVITY;
-                                    double xSquared = distance * 1000 * distance * 1000;
-
-                                    // The term inside the square root (part of the quadratic formula solution)
-                                    double operandB = GRAVITY * (gravitySquared * xSquared + 2 * 1 * vSquared);
-
-                                    // Check if the target is unreachable (discriminant is negative)
-                                    if (operandB > vQuad) {
-                                        double naN = Double.NaN;
-                                       // return naN; // Cannot reach target with given speed
-                                    }
-
-                                    double root = Math.sqrt(vQuad - operandB);
-                                    double angle1 = Math.atan2(vSquared + root, GRAVITY * distance);
-                                    double angle2 = Math.atan2(vSquared - root, GRAVITY * distance);
-
-                                    // Return the smaller (lower) angle
-                                   // return min(angle1, angle2);
-                                }
-
-                                // Helper method to convert radians to degrees for easier understanding
-                                public double radiansToDegrees(double angleRadians) {
-                                    return Math.toDegrees(angleRadians);
-                                }
-
-                                public void main(String[] args) {
-                                    double velocity = 30.0; // m/s
-                                    double targetDistanceX = distance * 1000; // m
-                                    double targetDistanceY = 1.0; // m (e.g., shooting onto a small platform 5m high)
-
-                                    double angleRad = calculateLaunchAngle(velocity, distance, 1);
-
-                                    if (!Double.isNaN(angleRad)) {
-                                        System.out.println("Required launch angle (radians): " + angleRad);
-                                        System.out.println("Required launch angle (degrees): " + radiansToDegrees(angleRad));
-                                    } else {
-                                        System.out.println("Target is unreachable with the given velocity and parameters.");
-                                    }
-                                }
-                            }
-                            //double angleraw = calculateLaunchAngle();
-                            //double angle = angleraw;
+                            double distance = distance(result.getTa());
 
                             telemetry.addData("Distance", distance);
                             telemetry.addData("tx", result.getTx());
@@ -235,7 +162,6 @@ public class Teleop3 extends LinearOpMode {
                     double newTime = getRuntime();
                     double loopTime = newTime - oldTime;
                     double frequency = 1 / loopTime;
-                    oldTime = newTime;
 
 
                     Pose2D pos = odo.getPosition();
@@ -259,9 +185,8 @@ public class Teleop3 extends LinearOpMode {
                 }
             }
 
-    public double tagdistance(double ta) {
+    public double distance(double ta) {
         double scale = 1;
-        double distance = (scale / ta);
-        return distance;
+        return (scale / ta);
     }
 }

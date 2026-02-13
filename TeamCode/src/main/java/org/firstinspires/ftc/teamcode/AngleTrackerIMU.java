@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-public class AngleTrackerIMU {
+class AngleTrackerIMU {
 
-    private IMU imu;      // Control Hub IMU
+    private final IMU imu;      // Control Hub IMU
     private double resetVal = 0;
 
     /**

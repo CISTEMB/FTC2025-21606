@@ -15,24 +15,20 @@ public class Backup2 extends LinearOpMode {
     private DcMotor rbMotor;
     //gamepad2
     private DcMotor stMotor;
-    private DcMotor ltMotor;
-    private DcMotor inMotor;
-    private DcMotor jkMotor;
-    private CRServo hdMotor;
     private CRServo in2Motor;
     @Override
     public void runOpMode() throws InterruptedException {
         waitForStart();
         if (opModeIsActive()) {
-            lfMotor = hardwareMap.get(DcMotor.class, "frontleft");
-            lbMotor = hardwareMap.get(DcMotor.class, "backleft");
-            rfMotor = hardwareMap.get(DcMotor.class, "frontright");
-            rbMotor = hardwareMap.get(DcMotor.class, "backright");
+            lfMotor = hardwareMap.get(DcMotor.class, "front-left");
+            lbMotor = hardwareMap.get(DcMotor.class, "back-left");
+            rfMotor = hardwareMap.get(DcMotor.class, "front-right");
+            rbMotor = hardwareMap.get(DcMotor.class, "back-right");
             stMotor = hardwareMap.get(DcMotor.class, "ShooterMotor");
-            ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
-            jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
-            hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
-            inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
+            DcMotor ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
+            DcMotor jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
+            CRServo hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
+            DcMotor inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
 
 
@@ -58,7 +54,6 @@ public class Backup2 extends LinearOpMode {
                 rfMotor.setPower(1);
                 rbMotor.setPower(1);
                 stMotor.setPower(0.7);
-                wait( 5);
                 in2Motor.setPower(1);
             }
 
