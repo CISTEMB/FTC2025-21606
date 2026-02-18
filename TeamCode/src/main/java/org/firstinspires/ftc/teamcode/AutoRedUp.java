@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.nio.file.Paths;
 
-@Autonomous(name = "AutoBlueUp")
+@Autonomous(name = "AutoRedUp")
 public class AutoRedUp extends LinearOpMode {
 
 

@@ -9,6 +9,7 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.rev.RevSPARKMini;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -53,9 +54,10 @@ public class TeleopTest extends LinearOpMode {
     private CRServo hdMotor;
     private CRServo in2Motor;
     private Limelight3A limelight;
+    private DcMotorSimple stTest;
 
     private double GoalRPM = 0;
-    //    private JoinedTelemetry joinedTelemetry;
+
     TelemetryManager panelsTelemetry;
 
     GoBaldaPinpointDriver odo;
@@ -76,6 +78,7 @@ public class TeleopTest extends LinearOpMode {
             hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
+            stTest = hardwareMap.get(DcMotorSimple.class, "ShooterTest");
             odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
             panelsTelemetry.debug(11);
@@ -97,7 +100,7 @@ public class TeleopTest extends LinearOpMode {
         lbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        stMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        stMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
@@ -105,52 +108,8 @@ public class TeleopTest extends LinearOpMode {
         odo.resetPosAndIMU();
 
 
-        double shoot = 800;
         while (opModeIsActive()) {
-            if (gamepad2.dpad_left) {
-                shoot = shoot - 50;
-            } else if (gamepad2.dpad_right) {
-                shoot = shoot + 50;
-            }
-//                LLResult result = limelight.getLatestResult();
-//                double h2 = 29.5;
-//                double h1 = 12.7127;
-//                double a2 = 21.9714;
-//                double a1 = result.getTy();
-//                double d = (h2 - h1) / tan((a1 + a2) * 0.017453292519943295);
-//                if (result.isValid()) {
-//                    Pose3D botpose = result.getBotpose();
-//                    panelsTelemetry.debug("Distance", d);
-//                    panelsTelemetry.debug("tx", result.getTx());
-//                    panelsTelemetry.debug("ty", result.getTy());
-//                    panelsTelemetry.debug("Bot pose", botpose.toString());
-//                    panelsTelemetry.debug("AngularVelocity", stMotor.getVelocity());
-//                    panelsTelemetry.debug("Shoot" , shoot);
-//
-//
-//                } else {
-//                    Pose2D pos = odo.getPosition();
-//                    String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.RADIANS));
-//                    panelsTelemetry.debug("Position", data);
-//                    panelsTelemetry.debug("RPM", stMotor.getVelocity());
-//                    String velocity = String.format(Locale.US, "{XVel: %.3f, YVel: %.3f, HVel: %.3f}", odo.getVelX(DistanceUnit.MM), odo.getVelY(DistanceUnit.MM), odo.getHeadingVelocity(UnnormalizedAngleUnit.RADIANS));
-//                    panelsTelemetry.debug("Velocity", velocity);
-//                    panelsTelemetry.debug("Status", odo.getDeviceStatus());
-//                    panelsTelemetry.debug("Status", "Initialized");
-//                    panelsTelemetry.debug("X offset", odo.getXOffset(DistanceUnit.INCH));
-//                    panelsTelemetry.debug("Y offset", odo.getYOffset(DistanceUnit.INCH));
-//                    panelsTelemetry.debug("Device Version Number:", odo.getDeviceVersion());
-//                    panelsTelemetry.debug("Heading Scalar", odo.getYawScalar());
-//                    panelsTelemetry.debug("AngularVelocity", stMotor.getVelocity());
-//                    panelsTelemetry.debug("Battery Voltage", batteryVolt);
-//                    panelsTelemetry.debug("GoalRPM", GoalRPM);
-//                    panelsTelemetry.debug("EncoderRPM", EncoderRPM);
-//                    panelsTelemetry.debug("Output Percent", outputPercent);
-//                    panelsTelemetry.debug("OutputVolts", outputVolt);
-//                    panelsTelemetry.debug("ERROR", pidError);
-//                    panelsTelemetry.update(telemetry);
-//
-//                }
+
             odo.update();
 
             gamepad1.left_stick_y *= Math.abs(gamepad1.left_stick_y);
@@ -181,24 +140,6 @@ public class TeleopTest extends LinearOpMode {
             } else {
                 inMotor.setPower(-1);
             }
-//           if (result.getTa() < 0.4) {
-//                    if (gamepad2.left_bumper) {
-//                        stMotor.setVelocity(kSpeed);
-//                    } else if (gamepad2.right_trigger > 0.4) {
-//                        stMotor.setPower(-0.25);
-//                    } else {
-//                        stMotor.setPower(0);
-//                    }
-//                }
-//                if (result.getTa() > 0.4) {
-//                    if (gamepad2.left_bumper) {
-//                        stMotor.setVelocity(kSpeed);
-//                    } else if (gamepad2.right_trigger > 0.4) {
-//                        stMotor.setPower(-0.25);
-//                    } else {
-//                        stMotor.setPower(0);
-//                    }
-//                }
 
             if (gamepad2.left_bumper) {
                 GoalRPM = kTestRPM;
@@ -207,13 +148,14 @@ public class TeleopTest extends LinearOpMode {
                 GoalRPM = 0;
             }
 
-            if (gamepad1.x) {
-                in2Motor.setPower(-1);
-            } else if (gamepad1.y) {
+            if (gamepad2.x) {
                 in2Motor.setPower(1);
+            } else if (gamepad2.y) {
+                in2Motor.setPower(-1);
             } else {
                 in2Motor.setPower(0);
             }
+
             if (gamepad2.dpad_down) {
                 hdMotor.setPower(-1);
             } else if (gamepad2.dpad_up) {
@@ -229,6 +171,7 @@ public class TeleopTest extends LinearOpMode {
             } else {
                 in2Motor.setPower(0);
             }
+
             if (gamepad2.dpad_down) {
                 hdMotor.setPower(-1);
             } else if (gamepad2.dpad_up) {
@@ -249,7 +192,10 @@ public class TeleopTest extends LinearOpMode {
 
             double outputVolt = FFVolts + pidVolts;
             double outputPercent = outputVolt / batteryVolt;
-            stMotor.setPower(outputPercent);
+            //stMotor.setPower(outputPercent);
+            stMotor.setPower(1);
+            stTest.setPower(1);
+
 
             LLResult result = limelight.getLatestResult();
             double h2 = 29.5;
@@ -263,34 +209,18 @@ public class TeleopTest extends LinearOpMode {
                 panelsTelemetry.debug("tx", result.getTx());
                 panelsTelemetry.debug("ty", result.getTy());
                 panelsTelemetry.debug("Bot pose", botpose.toString());
-                panelsTelemetry.debug("AngularVelocity", stMotor.getVelocity());
-                panelsTelemetry.debug("Shoot", shoot);
-
-
-            } else {
-                Pose2D pos = odo.getPosition();
-                //String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.MM), pos.getY(DistanceUnit.MM), pos.getHeading(AngleUnit.RADIANS));
-               // panelsTelemetry.debug("Position", data);
-                panelsTelemetry.debug("RPM", stMotor.getVelocity());
-              //  String velocity = String.format(Locale.US, "{XVel: %.3f, YVel: %.3f, HVel: %.3f}", odo.getVelX(DistanceUnit.MM), odo.getVelY(DistanceUnit.MM), odo.getHeadingVelocity(UnnormalizedAngleUnit.RADIANS));
-              //  panelsTelemetry.debug("Velocity", velocity);
-              //  panelsTelemetry.debug("Status", odo.getDeviceStatus());
-               // panelsTelemetry.debug("Status", "Initialized");
-             //   panelsTelemetry.debug("X offset", odo.getXOffset(DistanceUnit.INCH));
-             //   panelsTelemetry.debug("Y offset", odo.getYOffset(DistanceUnit.INCH));
-             //   panelsTelemetry.debug("Device Version Number:", odo.getDeviceVersion());
-                panelsTelemetry.debug("Heading Scalar", odo.getYawScalar());
-                panelsTelemetry.debug("AngularVelocity", stMotor.getVelocity());
-                panelsTelemetry.addData("Battery Voltage", batteryVolt);
-                panelsTelemetry.addData("GoalRPM", GoalRPM);
-                panelsTelemetry.addData("EncoderRPM", EncoderRPM);
-                panelsTelemetry.addData("Output Percent", outputPercent);
-                panelsTelemetry.addData("OutputVolts", outputVolt);
-                panelsTelemetry.addData("ERROR", pidError);
-                panelsTelemetry.update(telemetry);
-
             }
-
+            Pose2D pos = odo.getPosition();
+            String data = String.format(Locale.US, "{X: %.3f, Y: %.3f, H: %.3f}", pos.getX(DistanceUnit.INCH), pos.getY(DistanceUnit.INCH), pos.getHeading(AngleUnit.DEGREES));
+            panelsTelemetry.debug("Odometry Position" , data);
+            panelsTelemetry.debug("Heading Scalar", odo.getYawScalar());
+            panelsTelemetry.addData("Battery Voltage", batteryVolt);
+            panelsTelemetry.addData("GoalRPM", GoalRPM);
+            panelsTelemetry.addData("EncoderRPM", EncoderRPM);
+            panelsTelemetry.addData("Output Percent", outputPercent);
+            panelsTelemetry.addData("OutputVolts", outputVolt);
+            panelsTelemetry.addData("pidERROR", pidError);
+            panelsTelemetry.update(telemetry);
 
         }
 
