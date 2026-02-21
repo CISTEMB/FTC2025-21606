@@ -4,12 +4,10 @@ package org.firstinspires.ftc.teamcode;
 import static java.lang.Math.tan;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.telemetry.JoinedTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevSPARKMini;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -19,10 +17,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
-import org.firstinspires.ftc.robotcore.external.navigation.UnnormalizedAngleUnit;
 
 import java.util.Locale;
 
@@ -31,17 +29,14 @@ import java.util.Locale;
 @Configurable
 public class TeleopTest extends LinearOpMode {
 
-    public static double kSpeed = 800;
-    public static double kStP = 0;
-    public static double kStF = 0;
-    public static double kTestRPM = 0;
-    //gamepad1
+    public static double kStP = 3000;
+    public static double kStF = 0.003;
+    public static double kTestRPM = 0.001;
     private DcMotor lfMotor;
     private DcMotor lbMotor;
     private VoltageSensor voltageSensor;
     private DcMotor rfMotor;
     private DcMotor rbMotor;
-    //gamepad2
 
     // 4000 Shooter Revs   1 Motor Revs      1 Min        28 Ticks     1,867 Ticks
     // ----------------- * --------------- *  ---------- * ---------- = ---------
@@ -54,8 +49,6 @@ public class TeleopTest extends LinearOpMode {
     private CRServo hdMotor;
     private CRServo in2Motor;
     private Limelight3A limelight;
-    private DcMotorSimple stTest;
-
     private double GoalRPM = 0;
 
     TelemetryManager panelsTelemetry;
@@ -78,7 +71,7 @@ public class TeleopTest extends LinearOpMode {
             hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
-            stTest = hardwareMap.get(DcMotorSimple.class, "ShooterTest");
+
             odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
             panelsTelemetry.debug(11);
@@ -136,7 +129,7 @@ public class TeleopTest extends LinearOpMode {
 
 
             if (gamepad1.right_bumper) {
-                inMotor.setPower(1);
+                inMotor.setPower(0.5);
             } else {
                 inMotor.setPower(-1);
             }
@@ -167,7 +160,7 @@ public class TeleopTest extends LinearOpMode {
             if (gamepad2.x) {
                 in2Motor.setPower(1);
             } else if (gamepad2.y) {
-                in2Motor.setPower(1);
+                in2Motor.setPower(-1);
             } else {
                 in2Motor.setPower(0);
             }
@@ -181,8 +174,7 @@ public class TeleopTest extends LinearOpMode {
             }
 
             double batteryVolt = voltageSensor.getVoltage();
-            double EncoderRPM = stMotor.getVelocity() / 28 * 60 * (36.0 / 22.0);
-            //double EncoderRPM = stMotor.getVelocity() * (12.0 / 22.0);
+            double EncoderRPM = stMotor.getVelocity() / 28 * 60 * (29.0 / 45.0);
 
             double FFVolts = kStF * GoalRPM;
             double pidError = GoalRPM - EncoderRPM;
@@ -192,9 +184,7 @@ public class TeleopTest extends LinearOpMode {
 
             double outputVolt = FFVolts + pidVolts;
             double outputPercent = outputVolt / batteryVolt;
-            //stMotor.setPower(outputPercent);
-            stMotor.setPower(1);
-            stTest.setPower(1);
+            stMotor.setPower(outputPercent);
 
 
             LLResult result = limelight.getLatestResult();
@@ -217,9 +207,11 @@ public class TeleopTest extends LinearOpMode {
             panelsTelemetry.addData("Battery Voltage", batteryVolt);
             panelsTelemetry.addData("GoalRPM", GoalRPM);
             panelsTelemetry.addData("EncoderRPM", EncoderRPM);
+            panelsTelemetry.addData("TrueStSpeed" , stMotor.getVelocity());
             panelsTelemetry.addData("Output Percent", outputPercent);
             panelsTelemetry.addData("OutputVolts", outputVolt);
             panelsTelemetry.addData("pidERROR", pidError);
+            panelsTelemetry.addData("Shooter Motor Current" , stMotor.getCurrent(CurrentUnit.AMPS));
             panelsTelemetry.update(telemetry);
 
         }
