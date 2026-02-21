@@ -29,9 +29,9 @@ import java.util.Locale;
 @Configurable
 public class TeleopTest extends LinearOpMode {
 
-    public static double kStP = 3000;
-    public static double kStF = 0.003;
-    public static double kTestRPM = 0.001;
+    public static double kStP = 0.032;
+    public static double kStF = 0.002;
+    public static double kTestRPM = 3000;
     private DcMotor lfMotor;
     private DcMotor lbMotor;
     private VoltageSensor voltageSensor;
@@ -43,16 +43,14 @@ public class TeleopTest extends LinearOpMode {
     // 1 Minutes           22/12 Shooter Revs    60 Seconds   1 Motors Rev   1 Second
 
     private DcMotorEx stMotor;
-    private DcMotor ltMotor;
+    private DcMotorEx stMotor2;
     private DcMotor inMotor;
-    private DcMotor jkMotor;
     private CRServo hdMotor;
     private CRServo in2Motor;
     private Limelight3A limelight;
     private double GoalRPM = 0;
 
     TelemetryManager panelsTelemetry;
-
     GoBaldaPinpointDriver odo;
 
     @Override
@@ -66,8 +64,7 @@ public class TeleopTest extends LinearOpMode {
             rfMotor = hardwareMap.get(DcMotor.class, "front-right");
             rbMotor = hardwareMap.get(DcMotor.class, "back-right");
             stMotor = hardwareMap.get(DcMotorEx.class, "ShooterMotor");
-            ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
-            jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
+            stMotor2 = hardwareMap.get(DcMotorEx.class , "ShooterMotor2");
             hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
@@ -86,14 +83,17 @@ public class TeleopTest extends LinearOpMode {
         lbMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rfMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         rbMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        ltMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        jkMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        stMotor2.setDirection(DcMotorEx.Direction.REVERSE);
+        stMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        inMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
 
         lfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         stMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        stMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
 
         odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
@@ -120,23 +120,19 @@ public class TeleopTest extends LinearOpMode {
             lfMotor.setPower((y + x + turn) / denominate);
             lbMotor.setPower((y - x + turn) / denominate);
             rfMotor.setPower((y - x - turn) / denominate);
-
             rbMotor.setPower((y + x - turn) / denominate);
 
 
-            ltMotor.setPower(gamepad2.right_stick_y);
-            jkMotor.setPower(gamepad2.left_stick_y);
 
 
-            if (gamepad1.right_bumper) {
-                inMotor.setPower(0.5);
-            } else {
-                inMotor.setPower(-1);
-            }
+
+
 
             if (gamepad2.left_bumper) {
                 GoalRPM = kTestRPM;
 
+            } else if (gamepad2.right_bumper) {
+                GoalRPM=-3000;
             } else {
                 GoalRPM = 0;
             }
@@ -172,9 +168,14 @@ public class TeleopTest extends LinearOpMode {
             } else {
                 hdMotor.setPower(0);
             }
+            if (gamepad1.right_bumper) {
+                inMotor.setPower(0.5);
+            } else {
+                inMotor.setPower(-1);
+            }
 
             double batteryVolt = voltageSensor.getVoltage();
-            double EncoderRPM = stMotor.getVelocity() / 28 * 60 * (29.0 / 45.0);
+            double EncoderRPM = stMotor.getVelocity() / 28 * 60 * (60.0 / 36.0);
 
             double FFVolts = kStF * GoalRPM;
             double pidError = GoalRPM - EncoderRPM;
@@ -185,7 +186,7 @@ public class TeleopTest extends LinearOpMode {
             double outputVolt = FFVolts + pidVolts;
             double outputPercent = outputVolt / batteryVolt;
             stMotor.setPower(outputPercent);
-
+            stMotor2.setPower(outputPercent);
 
             LLResult result = limelight.getLatestResult();
             double h2 = 29.5;
