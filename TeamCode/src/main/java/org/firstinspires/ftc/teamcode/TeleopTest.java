@@ -102,18 +102,24 @@ public class TeleopTest extends LinearOpMode {
 
 
         while (opModeIsActive()) {
-
+            LLResult result = limelight.getLatestResult();
             odo.update();
+            double y = 0;
+            double x = 0;
+            double turn = 0;
+            if (gamepad1.a) {
+                double tx = result.getTx();
+                turn = tx * 0.1;
 
-            gamepad1.left_stick_y *= Math.abs(gamepad1.left_stick_y);
-            gamepad1.left_stick_x *= Math.abs(gamepad1.left_stick_x);
+            } else {
+                gamepad1.left_stick_y *= Math.abs(gamepad1.left_stick_y);
+                gamepad1.left_stick_x *= Math.abs(gamepad1.left_stick_x);
 
-            gamepad1.right_stick_x *= Math.abs(gamepad1.right_stick_x);
-            double y = -gamepad1.left_stick_y;
-            double x = gamepad1.left_stick_x;
-            double turn = gamepad1.right_stick_x;
-
-
+                gamepad1.right_stick_x *= Math.abs(gamepad1.right_stick_x);
+                y = -gamepad1.left_stick_y;
+                x = gamepad1.left_stick_x;
+                turn = gamepad1.right_stick_x;
+            }
             double denominate;
             denominate = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(x) + Math.abs(turn), 1);
 
@@ -121,8 +127,6 @@ public class TeleopTest extends LinearOpMode {
             lbMotor.setPower((y - x + turn) / denominate);
             rfMotor.setPower((y - x - turn) / denominate);
             rbMotor.setPower((y + x - turn) / denominate);
-
-
 
 
 
@@ -188,7 +192,6 @@ public class TeleopTest extends LinearOpMode {
             stMotor.setPower(outputPercent);
             stMotor2.setPower(outputPercent);
 
-            LLResult result = limelight.getLatestResult();
             double h2 = 29.5;
             double h1 = 12.7127;
             double a2 = 21.9714;
