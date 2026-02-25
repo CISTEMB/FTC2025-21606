@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -31,7 +32,11 @@ public class TeleopTest extends LinearOpMode {
 
     public static double kStP = 0.032;
     public static double kStF = 0.002;
+    public static double kLlF = 0.024;
     public static double kTestRPM = 3000;
+    public static  double kHdDown = 2.5;
+    public static  double kHdUP = 0;
+    public static  double kHdMiddle = 1.25;
     private DcMotor lfMotor;
     private DcMotor lbMotor;
     private VoltageSensor voltageSensor;
@@ -45,7 +50,7 @@ public class TeleopTest extends LinearOpMode {
     private DcMotorEx stMotor;
     private DcMotorEx stMotor2;
     private DcMotor inMotor;
-    private CRServo hdMotor;
+    private Servo hdMotor;
     private CRServo in2Motor;
     private Limelight3A limelight;
     private double GoalRPM = 0;
@@ -65,7 +70,7 @@ public class TeleopTest extends LinearOpMode {
             rbMotor = hardwareMap.get(DcMotor.class, "back-right");
             stMotor = hardwareMap.get(DcMotorEx.class, "ShooterMotor");
             stMotor2 = hardwareMap.get(DcMotorEx.class , "ShooterMotor2");
-            hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
+            hdMotor = hardwareMap.get(Servo.class, "HoodMotor");
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
 
@@ -99,6 +104,7 @@ public class TeleopTest extends LinearOpMode {
         odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
         odo.setEncoderDirections(GoBaldaPinpointDriver.EncoderDirection.FORWARD, GoBaldaPinpointDriver.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
+        hdMotor.setPosition(0);
 
 
         while (opModeIsActive()) {
@@ -109,7 +115,7 @@ public class TeleopTest extends LinearOpMode {
             double turn = 0;
             if (gamepad1.a) {
                 double tx = result.getTx();
-                turn = tx * 0.1;
+                turn = tx * kLlF;
 
             } else {
                 gamepad1.left_stick_y *= Math.abs(gamepad1.left_stick_y);
@@ -149,14 +155,6 @@ public class TeleopTest extends LinearOpMode {
                 in2Motor.setPower(0);
             }
 
-            if (gamepad2.dpad_down) {
-                hdMotor.setPower(-1);
-            } else if (gamepad2.dpad_up) {
-                hdMotor.setPower(1);
-            } else {
-                hdMotor.setPower(0);
-            }
-
             if (gamepad2.x) {
                 in2Motor.setPower(1);
             } else if (gamepad2.y) {
@@ -166,16 +164,18 @@ public class TeleopTest extends LinearOpMode {
             }
 
             if (gamepad2.dpad_down) {
-                hdMotor.setPower(-1);
+                hdMotor.setPosition(kHdDown);
             } else if (gamepad2.dpad_up) {
-                hdMotor.setPower(1);
-            } else {
-                hdMotor.setPower(0);
+                hdMotor.setPosition(kHdUP);
+            } else if (gamepad2.dpad_right){
+                hdMotor.setPosition(kHdMiddle);
             }
             if (gamepad1.right_bumper) {
-                inMotor.setPower(0.5);
-            } else {
+                inMotor.setPower(1);
+            } else if (gamepad1.left_bumper) {
                 inMotor.setPower(-1);
+            } else {
+                inMotor.setPower(0);
             }
 
             double batteryVolt = voltageSensor.getVoltage();

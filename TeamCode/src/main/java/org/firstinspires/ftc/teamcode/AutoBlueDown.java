@@ -34,7 +34,9 @@ public class AutoBlueDown extends LinearOpMode {
 
 
     private DcMotorEx stMotor;
+    private DcMotor  st2Motor;
     private CRServo in2Motor;
+    private CRServo hdMotor;
     ElapsedTime runtime;
     @Override
 
@@ -49,9 +51,8 @@ public class AutoBlueDown extends LinearOpMode {
             DcMotor rfMotor = hardwareMap.get(DcMotor.class, "front-right");
             DcMotor rbMotor = hardwareMap.get(DcMotor.class, "back-right");
             stMotor = hardwareMap.get(DcMotorEx.class, "ShooterMotor");
-            ltMotor = hardwareMap.get(DcMotor.class, "LiftMotor");
-            jkMotor = hardwareMap.get(DcMotor.class, "JackMotor");
-            CRServo hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
+            st2Motor = hardwareMap.get(DcMotor.class, "ShooterMotor2");
+            hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
             DcMotor inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
             odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
@@ -72,8 +73,6 @@ public class AutoBlueDown extends LinearOpMode {
             lbMotor.setDirection(DcMotor.Direction.REVERSE);
             rfMotor.setDirection(DcMotor.Direction.REVERSE);
             rbMotor.setDirection(DcMotor.Direction.FORWARD);
-            ltMotor.setDirection(DcMotor.Direction.REVERSE);
-            jkMotor.setDirection(DcMotor.Direction.FORWARD);
 
             lfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             lbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -144,9 +143,11 @@ public class AutoBlueDown extends LinearOpMode {
 
                             .build();
                     stMotor.setVelocity(802.879);
+                    st2Motor.setPower(1);
 
 
                      if (runtime.seconds() > 8) {
+                        in2Motor.setPower(1);
                         in2Motor.setPower(1);
                     }
                      PathChain Path2;
