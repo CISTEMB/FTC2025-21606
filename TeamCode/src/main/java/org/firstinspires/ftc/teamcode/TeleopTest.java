@@ -6,6 +6,7 @@ import static java.lang.Math.tan;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.bylazar.lights.RGBIndicator;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -30,39 +31,56 @@ import java.util.Locale;
 @Configurable
 public class TeleopTest extends LinearOpMode {
 
+    public enum AutoShootState {
+        kIdle,
+        kAlignWithTarget,
+        kGrabShooterRPM,
+        kWaitForShooterRPM,
+        kWaitforShot,
+
+    }
+
+//Configurables
     public static double kStP = 0.032;
     public static double kStF = 0.002;
     public static double kLlF = 0.024;
     public static double kTestRPM = 3000;
-    public static  double kHdDown = 2.5;
-    public static  double kHdUP = 0;
+    public static  double kHdDown = 0;
+    public static  double kHdUP = 0.3; //5 teeth
     public static  double kHdMiddle = 1.25;
+    public static  double kmaxShooterPercentError = 0.01;
+    public static double kvelocityDipPercent = 0.01;
     private DcMotor lfMotor;
     private DcMotor lbMotor;
     private VoltageSensor voltageSensor;
     private DcMotor rfMotor;
     private DcMotor rbMotor;
+    //AngularVelocity to RPM
 
     // 4000 Shooter Revs   1 Motor Revs      1 Min        28 Ticks     1,867 Ticks
     // ----------------- * --------------- *  ---------- * ---------- = ---------
     // 1 Minutes           22/12 Shooter Revs    60 Seconds   1 Motors Rev   1 Second
 
+    //Device Imports
     private DcMotorEx stMotor;
     private DcMotorEx stMotor2;
     private DcMotor inMotor;
     private Servo hdMotor;
     private CRServo in2Motor;
     private Limelight3A limelight;
+    private GoBildaRGBIndicator leftRGB;
+    private GoBildaRGBIndicator rightRGB;
     private double GoalRPM = 0;
-
-    TelemetryManager panelsTelemetry;
+    private double shooterPercentError;
     GoBaldaPinpointDriver odo;
-
+    //TelemetryManager set to Panels
+    TelemetryManager panelsTelemetry;
     @Override
     public void runOpMode() {
         waitForStart();
         if (opModeIsActive()) {
             panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
+            //Device Hardware Mapping
             voltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
             lfMotor = hardwareMap.get(DcMotor.class, "front-left");
             lbMotor = hardwareMap.get(DcMotor.class, "back-left");
@@ -73,9 +91,10 @@ public class TeleopTest extends LinearOpMode {
             hdMotor = hardwareMap.get(Servo.class, "HoodMotor");
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
-
             odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
+            leftRGB = new GoBildaRGBIndicator(hardwareMap, "LeftRGB");
+            rightRGB = new GoBildaRGBIndicator(hardwareMap, "RightRGB");
             panelsTelemetry.debug(11);
 
             limelight.start();
@@ -83,6 +102,8 @@ public class TeleopTest extends LinearOpMode {
             odo.setPosition(72, 98);
 
         }
+
+        //Motor Directions
 
         lfMotor.setDirection(DcMotorSimple.Direction.FORWARD);
         lbMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -92,6 +113,7 @@ public class TeleopTest extends LinearOpMode {
         stMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         inMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
+        //Motor Modes
 
         lfMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         lbMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -100,6 +122,7 @@ public class TeleopTest extends LinearOpMode {
         stMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         stMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        //Constants Setup
 
         odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
         odo.setEncoderDirections(GoBaldaPinpointDriver.EncoderDirection.FORWARD, GoBaldaPinpointDriver.EncoderDirection.FORWARD);
@@ -110,14 +133,74 @@ public class TeleopTest extends LinearOpMode {
         while (opModeIsActive()) {
             LLResult result = limelight.getLatestResult();
             odo.update();
+            if (result.isValid()) {
+                leftRGB.set(GoBildaRGBIndicator.Color.Green);
+                rightRGB.set(GoBildaRGBIndicator.Color.Green);
+            } else {
+                leftRGB.set(GoBildaRGBIndicator.Color.Off);
+                rightRGB.set(GoBildaRGBIndicator.Color.Off);
+            }
+
+
             double y = 0;
             double x = 0;
             double turn = 0;
-            if (gamepad1.a) {
-                double tx = result.getTx();
-                turn = tx * kLlF;
 
-            } else {
+            switch (autoShootState){
+                case kIdle:
+                    in2Motor.setPower(0);
+                    GoalRPM = 0;
+                    hdMotor.setPosition(kHdDown);
+
+                    if (gamepad2.a){
+                        autoShootState = AutoShootState.kAlignWithTarget;
+                    }
+                    break;
+                case kAlignWithTarget:
+                    hdMotor.setPosition(kHdUP);
+                    in2Motor.setPower(0);
+
+                    double tx = result.getTx();
+                    turn = tx * kLlF;
+                    if ( Math.abs(tx) < 2.5 && result.isValid()) {
+                        autoShootState = AutoShootState.kGrabShooterRPM;
+                    }
+                    break;
+                case kGrabShooterRPM:
+                    hdMotor.setPosition(kHdUP);
+                    in2Motor.setPower(0);
+                    tx = result.getTx();
+                    turn = tx * kLlF;
+
+                    GoalRPM = 3515;
+
+                    autoShootState = AutoShootState.kWaitForShooterRPM;
+                    break;
+                case kWaitForShooterRPM:
+                    tx = result.getTx();
+                    turn = tx * kLlF;
+                    hdMotor.setPosition(kHdUP);
+                    in2Motor.setPower(0);
+
+                    if (Math.abs(shooterPercentError) < kmaxShooterPercentError){
+                        autoShootState = AutoShootState.kWaitforShot;
+                    }
+                    break;
+                case kWaitforShot:
+                    tx = result.getTx();
+                    turn = tx * kLlF;
+                    hdMotor.setPosition(kHdUP);
+                    in2Motor.setPower(1);
+                    if (Math.abs(shooterPercentError) > kvelocityDipPercent) {
+                        autoShootState = AutoShootState.kWaitForShooterRPM;
+                    }
+
+                    break;
+            }
+
+            if (!gamepad2.a) {
+                autoShootState = AutoShootState.kIdle;
+
                 gamepad1.left_stick_y *= Math.abs(gamepad1.left_stick_y);
                 gamepad1.left_stick_x *= Math.abs(gamepad1.left_stick_x);
 
@@ -135,43 +218,34 @@ public class TeleopTest extends LinearOpMode {
             rbMotor.setPower((y + x - turn) / denominate);
 
 
+//            if (gamepad2.left_bumper) {
+//                GoalRPM = kTestRPM;
+//
+//            } else if (gamepad2.right_bumper) {
+//                GoalRPM=-3000;
+//            } else {
+//                GoalRPM = 0;
+//            }
 
 
 
-            if (gamepad2.left_bumper) {
-                GoalRPM = kTestRPM;
+//            if (gamepad2.x) {
+//                in2Motor.setPower(1);
+//            } else if (gamepad2.y) {
+//                in2Motor.setPower(-1);
+//            } else {
+//                in2Motor.setPower(0);
+//            }
 
-            } else if (gamepad2.right_bumper) {
-                GoalRPM=-3000;
-            } else {
-                GoalRPM = 0;
-            }
-
-            if (gamepad2.x) {
-                in2Motor.setPower(1);
-            } else if (gamepad2.y) {
-                in2Motor.setPower(-1);
-            } else {
-                in2Motor.setPower(0);
-            }
-
-            if (gamepad2.x) {
-                in2Motor.setPower(1);
-            } else if (gamepad2.y) {
-                in2Motor.setPower(-1);
-            } else {
-                in2Motor.setPower(0);
-            }
-
-            if (gamepad2.dpad_down) {
-                hdMotor.setPosition(kHdDown);
-            } else if (gamepad2.dpad_up) {
-                hdMotor.setPosition(kHdUP);
-            } else if (gamepad2.dpad_right){
-                hdMotor.setPosition(kHdMiddle);
-            }
+//            if (gamepad2.dpad_down) {
+//                hdMotor.setPosition(kHdDown);
+//            } else if (gamepad2.dpad_up) {
+//                hdMotor.setPosition(kHdUP);
+//            } else if (gamepad2.dpad_right){
+//                hdMotor.setPosition(kHdMiddle);
+//            }
             if (gamepad1.right_bumper) {
-                inMotor.setPower(1);
+                inMotor.setPower(0.5);
             } else if (gamepad1.left_bumper) {
                 inMotor.setPower(-1);
             } else {
@@ -183,6 +257,7 @@ public class TeleopTest extends LinearOpMode {
 
             double FFVolts = kStF * GoalRPM;
             double pidError = GoalRPM - EncoderRPM;
+            shooterPercentError = (GoalRPM - EncoderRPM) / GoalRPM;
             double pidVolts = 0;
             pidVolts += pidVolts + kStP * pidError;
             ;
@@ -215,13 +290,39 @@ public class TeleopTest extends LinearOpMode {
             panelsTelemetry.addData("Output Percent", outputPercent);
             panelsTelemetry.addData("OutputVolts", outputVolt);
             panelsTelemetry.addData("pidERROR", pidError);
+            panelsTelemetry.addData("ShooterPercentError", shooterPercentError);
+            panelsTelemetry.addData("AutoShootState", autoShootState.toString());
             panelsTelemetry.addData("Shooter Motor Current" , stMotor.getCurrent(CurrentUnit.AMPS));
+            panelsTelemetry.addData("TurnValue", turn);
             panelsTelemetry.update(telemetry);
 
         }
 
 
     }
+
+    private AutoShootState autoShootState = AutoShootState.kIdle;
+//    private void runAutoShoot(){
+//        switch (autoShootState){
+//            case kIdle:
+//                in2Motor.setPower(0);
+//                GoalRPM = 0;
+//
+//                if (gamepad2.a){
+//                    autoShootState = AutoShootState.kAlignWithTarget;
+//                }
+//                break;
+//            case kAlignWithTarget:
+//
+//                break;
+//            case kGrabShooterRPM:
+//                break;
+//            case kWaitForShooterRPM:
+//                break;
+//            case kWaitforShot:
+//                break;
+//        }
+//    }
 }
 
 
