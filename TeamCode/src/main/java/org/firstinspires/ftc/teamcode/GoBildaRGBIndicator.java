@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class GoBildaRGBIndicator {
     public enum Color {
         Off(0.0),
-        Red(0.277),
+        Red(0.3),
         Orange(0.333),
         Yellow(0.388),
         Sage(0.444),
