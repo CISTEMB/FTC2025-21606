@@ -22,6 +22,10 @@ public class Shooter extends SubsystemBase {
     public static double kStP = 0.032;
     public static double kStF = 0.002;
 
+    public static double kAtGoalPercentError = 0.05;
+    public static double kvelocityDipPercent = 0.1;
+
+
     //
     // Hardware
     //
@@ -53,6 +57,18 @@ public class Shooter extends SubsystemBase {
         voltageSensor = hw.get(VoltageSensor.class, "Control Hub");
 
         this.telemetry = telemetry;
+    }
+
+    public double getPercentError() {
+        return percentError;
+    }
+
+    public boolean isAtGoal() {
+        return Math.abs(percentError) < kAtGoalPercentError;
+    }
+
+    public boolean hasShot() {
+        return Math.abs(percentError) > kvelocityDipPercent;
     }
 
     public Command setRPM(double rpm) {
