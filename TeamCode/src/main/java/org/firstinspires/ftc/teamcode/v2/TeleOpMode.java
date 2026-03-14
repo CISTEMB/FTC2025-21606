@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.v2;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.v2.subsystems.Vision;
+
 @TeleOp(name="TeleOp V2")
 public class TeleOpMode extends RobotBase {
 
@@ -22,6 +24,9 @@ public class TeleOpMode extends RobotBase {
         //
         commandGamepad2.dpadUp().whenPressed(hood.up());
         commandGamepad2.dpadDown().whenPressed(hood.down());
+
+        commandGamepad2.back().whenPressed(vision.setPipeline(Vision.Pipeline.kBlueOnly));
+        commandGamepad2.start().whenPressed(vision.setPipeline(Vision.Pipeline.kRedOnly));
 
         // Manual Shooter control
         commandGamepad2.rightBumper().whileHeld(shooter.setRPM(-6000));

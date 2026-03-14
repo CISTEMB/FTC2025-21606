@@ -9,12 +9,14 @@ import org.firstinspires.ftc.teamcode.v2.subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.v2.subsystems.Vision;
 
 public abstract class RobotBase extends CommandOpMode {
 
     //
     // Subsystems
     //
+    protected Vision vision;
     protected Intake intake;
     protected Feeder feeder;
     protected Hood hood;
@@ -38,6 +40,7 @@ public abstract class RobotBase extends CommandOpMode {
                 telemetry
         );
 
+        vision = new Vision(hardwareMap, joinedTelemetry);
         intake = new Intake(hardwareMap, joinedTelemetry);
         feeder = new Feeder(hardwareMap, joinedTelemetry);
         hood = new Hood(hardwareMap, joinedTelemetry);
