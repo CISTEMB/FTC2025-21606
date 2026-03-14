@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Hardware.V1;
 
 
 import static java.lang.Math.tan;
@@ -65,15 +65,15 @@ public class TeleopAuto extends LinearOpMode {
 
     private Limelight3A limelight;
 
-    private GoBildaRGBIndicator leftRGB;
-    private GoBildaRGBIndicator rightRGB;
+    private org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator leftRGB;
+    private org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator rightRGB;
     //declare Auto shoot Enum
     private AutoShootState autoShootState = AutoShootState.kIdle;
     //Variable Import
     double GoalRPM;
     private double shooterPercentError;
     private double LatchedLLDistance;
-    GoBaldaPinpointDriver odo;
+    org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver odo;
     //TelemetryManager set to Panels
     TelemetryManager panelsTelemetry;
     @Override
@@ -93,10 +93,10 @@ public class TeleopAuto extends LinearOpMode {
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(DcMotor.class, "Intake2Motor");
             FeederMotor = hardwareMap.get(CRServo.class, "FeederMotor");
-            odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
+            odo = hardwareMap.get(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
-            leftRGB = new GoBildaRGBIndicator(hardwareMap, "LeftRGB");
-            rightRGB = new GoBildaRGBIndicator(hardwareMap, "RightRGB");
+            leftRGB = new org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator(hardwareMap, "LeftRGB");
+            rightRGB = new org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator(hardwareMap, "RightRGB");
             panelsTelemetry.debug(11);
 
             limelight.start();
@@ -151,8 +151,8 @@ public class TeleopAuto extends LinearOpMode {
 
         //Constants Setup
 
-        odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
-        odo.setEncoderDirections(GoBaldaPinpointDriver.EncoderDirection.FORWARD, GoBaldaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderResolution(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
+        odo.setEncoderDirections(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.EncoderDirection.FORWARD, org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
         hdMotor.setPosition(0);
 
@@ -175,14 +175,14 @@ public class TeleopAuto extends LinearOpMode {
 
             double pipeline = result.getPipelineIndex();
             if (result.isValid() && pipeline == 0) {
-                leftRGB.set(GoBildaRGBIndicator.Color.Red);
-                rightRGB.set(GoBildaRGBIndicator.Color.Red);
+                leftRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Red);
+                rightRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Red);
             } else if (result.isValid() && pipeline == 1) {
-                leftRGB.set(GoBildaRGBIndicator.Color.Blue);
-                rightRGB.set(GoBildaRGBIndicator.Color.Blue);
+                leftRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Blue);
+                rightRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Blue);
             } else {
-                leftRGB.set(GoBildaRGBIndicator.Color.Off);
-                rightRGB.set(GoBildaRGBIndicator.Color.Off);
+                leftRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Off);
+                rightRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Off);
             }
 
             //Turn Values
