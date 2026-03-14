@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.v2.lib.CommandGamepad;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Intake;
+import org.firstinspires.ftc.teamcode.v2.subsystems.Shooter;
 
 public abstract class RobotBase extends CommandOpMode {
 
@@ -17,6 +18,7 @@ public abstract class RobotBase extends CommandOpMode {
     protected Intake intake;
     protected Feeder feeder;
     protected Hood hood;
+    protected Shooter shooter;
 
     //
     // OI
@@ -39,6 +41,7 @@ public abstract class RobotBase extends CommandOpMode {
         intake = new Intake(hardwareMap, joinedTelemetry);
         feeder = new Feeder(hardwareMap, joinedTelemetry);
         hood = new Hood(hardwareMap, joinedTelemetry);
+        shooter = new Shooter(hardwareMap, joinedTelemetry);
 
         configureButtonBindings();
     }

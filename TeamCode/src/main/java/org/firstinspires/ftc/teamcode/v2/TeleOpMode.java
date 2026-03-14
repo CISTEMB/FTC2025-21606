@@ -22,5 +22,10 @@ public class TeleOpMode extends RobotBase {
         //
         commandGamepad2.dpadUp().whenPressed(hood.up());
         commandGamepad2.dpadDown().whenPressed(hood.down());
+
+        // Manual Shooter control
+        commandGamepad2.rightBumper().whileHeld(shooter.setRPM(-6000));
+        commandGamepad2.leftBumper().whileHeld(shooter.setRPM(3515));
+        commandGamepad2.x().whileHeld(feeder.in());
     }
 }
