@@ -40,7 +40,7 @@ public class TeleopMan extends LinearOpMode {
     private CRServo hdMotor;
     private CRServo in2Motor;
     private Limelight3A limelight;
-    GoBaldaPinpointDriver odo;
+    org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver odo;
 
 
     @Override

@@ -53,7 +53,7 @@ public class AutoBlueUp extends LinearOpMode {
     private int pathState; // Current autonomous path state (state machine)
     private Paths paths; // Paths defined in the Paths class
     private final Pose Target_Location = new Pose(72, 78);
-    GoBaldaPinpointDriver odo;
+    org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver odo;
 
 
     private DcMotor lfMotor;
@@ -74,8 +74,8 @@ public class AutoBlueUp extends LinearOpMode {
     private DcMotor in2Motor;
     private Servo hdMotor;
     private CRServo FeederMotor;
-    private GoBildaRGBIndicator leftRGB;
-    private GoBildaRGBIndicator rightRGB;
+    private org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator leftRGB;
+    private org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator rightRGB;
     private double GoalRPM = 0;
     private double LatchedLLDistance;
     private double shooterPercentError;
