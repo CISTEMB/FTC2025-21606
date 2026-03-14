@@ -5,18 +5,20 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.V2.Libs.CommandGamepad;
+import org.firstinspires.ftc.teamcode.V2.Subsystems.Intake;
 
 public abstract class RobotBase extends CommandOpMode {
 
 
     //Subsystems
-
+protected Intake intake;
 
     //OI
-    protected CommandGamepad CommmandGamepad1 = new CommandGamepad(gamepad1);
-    protected CommandGamepad CommmandGamepad2 = new CommandGamepad(gamepad2);
+    protected CommandGamepad CommandGamepad1 = new CommandGamepad(gamepad1);
+    protected CommandGamepad CommandGamepad2 = new CommandGamepad(gamepad2);
 
     //Helpers
+
     protected JoinedTelemetry joinedTelemetry;
 
     @Override
@@ -25,6 +27,7 @@ public abstract class RobotBase extends CommandOpMode {
         PanelsTelemetry.INSTANCE.getFtcTelemetry(),
         telemetry);
 
+        intake = new Intake(hardwareMap, joinedTelemetry);
 
         configureButtonBindings();
     }
