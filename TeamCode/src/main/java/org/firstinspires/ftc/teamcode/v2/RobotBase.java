@@ -5,12 +5,14 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.v2.lib.CommandGamepad;
+import org.firstinspires.ftc.teamcode.v2.subsystems.Intake;
 
 public abstract class RobotBase extends CommandOpMode {
 
     //
     // Subsystems
     //
+    protected Intake intake;
 
     //
     // OI
@@ -29,6 +31,8 @@ public abstract class RobotBase extends CommandOpMode {
                 PanelsTelemetry.INSTANCE.getFtcTelemetry(),
                 telemetry
         );
+
+        intake = new Intake(hardwareMap, joinedTelemetry);
 
         configureButtonBindings();
     }
