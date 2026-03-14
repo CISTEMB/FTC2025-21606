@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.v1;
 
 import static java.lang.Math.tan;
 
@@ -18,20 +18,20 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.hardware.GoBaldaPinpointDriver;
+import org.firstinspires.ftc.teamcode.hardware.GoBildaRGBIndicator;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.nio.file.Paths;
 import java.util.Locale;
 
-@Autonomous(name = "AutoBlueUp")
-public class AutoBlueUp extends LinearOpMode {
+@Autonomous(name = "AutoRedUp")
+public class AutoRedUp extends LinearOpMode {
 
     public enum ShootState {
         kAlignWithTarget,
@@ -43,7 +43,7 @@ public class AutoBlueUp extends LinearOpMode {
 
     public static double kStP = 0.032;
     public static double kStF = 0.002;
-    public static double kLlF = 0.05;
+    public static double kLlF = 0.03;
     public static double kTestRPM = 3000;
     public static double kHdDown = 0;
     public static double kHdUP = 0.3; //5 teeth
@@ -167,11 +167,11 @@ public class AutoBlueUp extends LinearOpMode {
                 public Paths(Follower follower) {
                     Path1 = follower.pathBuilder().addPath(
                                     new BezierLine(
-                                            new Pose(20, 120),
+                                            new Pose(120, 120),
 
                                             new Pose(72, 98)
                                     )
-                            ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(-180))
+                            ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(180))
 
                             .build();
                     Paths paths1;
@@ -184,8 +184,8 @@ public class AutoBlueUp extends LinearOpMode {
                 panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();
 
 
-                in2Motor.setPower(0.4);
-                inMotor.setPower(0.4);
+                in2Motor.setPower(0.5);
+                inMotor.setPower(0.5);
 
                 LLResult result = limelight.getLatestResult();
                 double h2 = 29.5;

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.v1;
 
 import static java.lang.Math.tan;
 
@@ -20,15 +20,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.hardware.GoBildaRGBIndicator;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.nio.file.Paths;
-import java.util.Locale;
 
 @Autonomous(name = "AutoRedDown")
 public class AutoRedDown extends LinearOpMode {
