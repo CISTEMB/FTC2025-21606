@@ -105,6 +105,17 @@ public class Vision extends SubsystemBase {
         return 0;
     }
 
+    public Command waitForAlignment() {
+        return Commands.waitUntil( () -> {
+            Optional<Double> angle = getHorizontalAngle();
+            if(angle.isPresent()) {
+                return Math.abs(angle.get()) < 2.5;
+            }
+
+            return false;
+        });
+    }
+
     @Override
     public void periodic() {
         //Limelight Data

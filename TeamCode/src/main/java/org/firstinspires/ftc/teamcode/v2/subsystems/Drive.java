@@ -14,4 +14,8 @@ public class Drive extends SubsystemBase {
     public void arcade(double forward, double turn, double strafe) {
 
     }
+
+    public void stop() {
+
+    }
 }

@@ -44,7 +44,7 @@ public class TeleopAuto extends LinearOpMode {
     //Constants
     public double kStP = 0.032;
     public double kStF = 0.002;
-    public double kLLP = 0.03;
+        public double kLLP = 0.03;
     public double kTestRPM = 3000;
     public  double kHdDown = 0;
     public  double kHdUP = 0.35; //5 teeth
