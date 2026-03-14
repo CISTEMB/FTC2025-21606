@@ -19,6 +19,8 @@ public class Shooter extends SubsystemBase {
     //Constants
     public double kStP = 0.032;
     public double kStF = 0.002;
+    public  double kAtGoalPercentError = 0.05;
+    public double kvelocityDipPercent = 0.1;
 
     //Hardware
     private final DcMotorEx motor1;
@@ -41,10 +43,25 @@ public class Shooter extends SubsystemBase {
         motor2.setDirection(DcMotorSimple.Direction.REVERSE);
         motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        voltageSensor = hw.get(VoltageSensor.class, "Control Hub");
+
 
         this.telemetry = telemetry;
 
     }
+
+    public double getPercentError{
+        return percentError;
+    }
+
+    public boolean isAtGoalRPM() {
+        return Math.abs(percentError) < kAtGoalPercentError;
+    }
+
+    public boolean hasShoot() {
+        return Math.abs(percentError) > kvelocityDipPercent;
+    }
+
     public Command setRPM(double rpm) {
         return setRPM(() -> rpm);
     }
