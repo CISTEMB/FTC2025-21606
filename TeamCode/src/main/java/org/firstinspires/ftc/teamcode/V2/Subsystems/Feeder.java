@@ -30,12 +30,14 @@ public class Feeder extends SubsystemBase {
     public Command in() {
         return Commands.runEnd(
                 () -> servo.setPower(1),
+                () -> servo.setPower(0),
                 this
         );
     }
     public Command out() {
         return Commands.runEnd(
                 () -> servo.setPower(-1),
+                () -> servo.setPower(0),
                 this
 
         );

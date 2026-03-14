@@ -57,7 +57,7 @@ public class TeleopMan extends LinearOpMode {
             hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
-            odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
+            odo = hardwareMap.get(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
             telemetry.setMsTransmissionInterval(11);
 
@@ -82,8 +82,8 @@ public class TeleopMan extends LinearOpMode {
         stMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        odo.setEncoderResolution(GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
-        odo.setEncoderDirections(GoBaldaPinpointDriver.EncoderDirection.FORWARD, GoBaldaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderResolution(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
+        odo.setEncoderDirections(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.EncoderDirection.FORWARD, org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
 
 

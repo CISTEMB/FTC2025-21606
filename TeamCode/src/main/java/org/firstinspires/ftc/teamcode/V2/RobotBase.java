@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.V2.Libs.CommandGamepad;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Hood;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Intake;
+import org.firstinspires.ftc.teamcode.V2.Subsystems.Shooter;
 
 public abstract class RobotBase extends CommandOpMode {
 
@@ -16,6 +17,7 @@ public abstract class RobotBase extends CommandOpMode {
 protected Intake intake;
 protected Feeder feeder;
 protected Hood hood;
+protected Shooter shooter;
 
 
     //OI
@@ -35,6 +37,8 @@ protected Hood hood;
         intake = new Intake(hardwareMap, joinedTelemetry);
         feeder = new Feeder(hardwareMap, joinedTelemetry);
         hood = new Hood(hardwareMap, joinedTelemetry);
+        shooter = new Shooter(hardwareMap, joinedTelemetry);
+
 
 
 
@@ -46,7 +50,6 @@ protected Hood hood;
     @Override
     public void run() {
         super.run();
-
         joinedTelemetry.update();
     }
 }

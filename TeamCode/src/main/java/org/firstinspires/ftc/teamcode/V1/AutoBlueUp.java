@@ -102,7 +102,7 @@ public class AutoBlueUp extends LinearOpMode {
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(DcMotor.class, "Intake2Motor");
             FeederMotor = hardwareMap.get(CRServo.class, "FeederMotor");
-            odo = hardwareMap.get(GoBaldaPinpointDriver.class, "pinpoint");
+            odo = hardwareMap.get(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
             panelsTelemetry.debug(11);
             panelsTelemetry.debug(11);
