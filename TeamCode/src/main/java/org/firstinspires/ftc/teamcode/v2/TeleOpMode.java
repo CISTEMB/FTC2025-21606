@@ -20,6 +20,7 @@ public class TeleOpMode extends RobotBase {
         //
         // Gamepad 2
         //
-
+        commandGamepad2.dpadUp().whenPressed(hood.up());
+        commandGamepad2.dpadDown().whenPressed(hood.down());
     }
 }
