@@ -5,6 +5,7 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.v2.lib.CommandGamepad;
+import org.firstinspires.ftc.teamcode.v2.subsystems.Drive;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Hood;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Intake;
@@ -21,6 +22,7 @@ public abstract class RobotBase extends CommandOpMode {
     protected Feeder feeder;
     protected Hood hood;
     protected Shooter shooter;
+    protected Drive drive;
 
     //
     // OI
@@ -45,6 +47,7 @@ public abstract class RobotBase extends CommandOpMode {
         feeder = new Feeder(hardwareMap, joinedTelemetry);
         hood = new Hood(hardwareMap, joinedTelemetry);
         shooter = new Shooter(hardwareMap, joinedTelemetry);
+        drive = new Drive(hardwareMap, joinedTelemetry);
 
         configureButtonBindings();
     }
