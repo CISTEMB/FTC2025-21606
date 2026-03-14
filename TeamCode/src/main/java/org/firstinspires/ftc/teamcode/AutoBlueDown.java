@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import static java.lang.Math.tan;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
@@ -30,6 +31,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 import java.nio.file.Paths;
 import java.util.Locale;
 
+//@Configurable
 @Autonomous(name = "AutoBlueDown")
 public class AutoBlueDown extends LinearOpMode {
 
@@ -43,11 +45,11 @@ public class AutoBlueDown extends LinearOpMode {
 
     public static double kStP = 0.032;
     public static double kStF = 0.002;
-    public static double kLlF = 0.03;
+    public static double kLlF = 0.1;
     public static double kTestRPM = 3000;
     public static double kHdDown = 0;
-    public static double kHdUP = 0.3; //5 teeth
-    public static double kmaxShooterPercentError = 0.05;
+    public static double kHdUP = 0.35; //5 teeth
+    public static double kmaxShooterPercentError = 0.01;
     public static double kvelocityDipPercent = 0.1;
     public static double kIntakeSpeed = 1;
     private ShootState shootState = ShootState.kAlignWithTarget;
@@ -79,10 +81,12 @@ public class AutoBlueDown extends LinearOpMode {
     private CRServo FeederMotor;
     private GoBildaRGBIndicator leftRGB;
     private GoBildaRGBIndicator rightRGB;
-    private double GoalRPM;
+    private double GoalRPM = 3555;
     private double LatchedLLDistance;
     private double shooterPercentError;
-
+    double targetTimeSeconds = 25;
+    double targetTimeSeconds2 = 28;
+    ElapsedTime runtime = new ElapsedTime();
     @Override
 
     public void runOpMode() {
@@ -139,34 +143,43 @@ public class AutoBlueDown extends LinearOpMode {
 
 
         }
-        while (opModeIsActive()) {
-            ElapsedTime runtime = new ElapsedTime();
+        while (opModeIsActive() &&  runtime.seconds() < 25) {
+            GoalRPM = 3555;
+            double batteryVolt = voltageSensor.getVoltage();
+            double EncoderRPM = stMotor.getVelocity() / 28 * 60 * (60.0 / 36.0);
+
+            double FFVolts = kStF * GoalRPM;
+            double pidError = GoalRPM - EncoderRPM;
+            shooterPercentError = (GoalRPM - EncoderRPM) / GoalRPM;
+            double pidVolts = 0;
+            pidVolts += pidVolts + kStP * pidError;
 
 
-
-                Follower follower = Constants.createFollower(hardwareMap);
-                follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
-
-                // paths = new Paths(follower); // Build paths
+            double outputVolt = FFVolts + pidVolts;
+            double outputPercent = outputVolt / batteryVolt;
 
 
-                follower.update(); // Update Pedro Pathing
+            Follower follower = Constants.createFollower(hardwareMap);
+            follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
+
+            // paths = new Paths(follower); // Build paths
 
 
-                boolean following = false;
-                if (!following) {
-                    follower.followPath(
-                            follower.pathBuilder()
-                                    .addPath(new BezierLine(follower.getPose(), Target_Location))
-                                    .setLinearHeadingInterpolation(follower.getHeading(), Target_Location.minus(follower.getPose()).getAsVector().getTheta())
-                                    .build()
-                    );
-                }
-
-                Pose2D get2;
-                limelight.pipelineSwitch(3);
+            follower.update(); // Update Pedro Pathing
 
 
+//            boolean following = false;
+//            if (!following) {
+//                follower.followPath(
+//                        follower.pathBuilder()
+//                                .addPath(new BezierLine(follower.getPose(), Target_Location))
+//                                .setLinearHeadingInterpolation(follower.getHeading(), Target_Location.minus(follower.getPose()).getAsVector().getTheta())
+//                                .build()
+//                );
+//            }
+
+            Pose2D get2;
+            limelight.pipelineSwitch(3);
 
 
             class Paths {
@@ -196,12 +209,14 @@ public class AutoBlueDown extends LinearOpMode {
             double turn = 0;
 
             // Paths Path1;
+            double tx = result.getTx();
             switch (shootState) {
                 case kAlignWithTarget:
                     hdMotor.setPosition(kHdUP);
                     FeederMotor.setPower(0);
+                    GoalRPM = 3555;
 
-                    double tx = result.getTx();
+                    tx = result.getTx();
                     turn = tx * kLlF;
                     if (Math.abs(tx) < 2.5 && result.isValid()) {
                         shootState = ShootState.kGrabShooterRPM;
@@ -213,7 +228,7 @@ public class AutoBlueDown extends LinearOpMode {
                     tx = result.getTx();
                     turn = tx * kLlF;
 
-                    GoalRPM = 3565;
+                    GoalRPM = 3555;
 
                     shootState = ShootState.kWaitForShooterRPM;
                     break;
@@ -240,12 +255,7 @@ public class AutoBlueDown extends LinearOpMode {
                     break;
 
             }
-            if (runtime.seconds() > 28) {
-                lfMotor.setPower(-1);
-                lbMotor.setPower(1);
-                rfMotor.setPower(1);
-                rbMotor.setPower(-1);
-            }
+            // turn = tx * kLlF;
 
 
             double denominate;
@@ -256,21 +266,9 @@ public class AutoBlueDown extends LinearOpMode {
             rfMotor.setPower((y - x - turn) / denominate);
             rbMotor.setPower((y + x - turn) / denominate);
             //PID Controller
-            double batteryVolt = voltageSensor.getVoltage();
-            double EncoderRPM = stMotor.getVelocity() / 28 * 60 * (60.0 / 36.0);
 
-            double FFVolts = kStF * GoalRPM;
-            double pidError = GoalRPM - EncoderRPM;
-            shooterPercentError = (GoalRPM - EncoderRPM) / GoalRPM;
-            double pidVolts = 0;
-            pidVolts += pidVolts + kStP * pidError;
-
-
-            double outputVolt = FFVolts + pidVolts;
-            double outputPercent = outputVolt / batteryVolt;
-
-            in2Motor.setPower(0.5);
-            inMotor.setPower(0.5);
+            in2Motor.setPower(0.6);
+            inMotor.setPower(0.6);
             stMotor.setPower(outputPercent);
             stMotor2.setPower(outputPercent);
 
@@ -290,9 +288,41 @@ public class AutoBlueDown extends LinearOpMode {
             panelsTelemetry.addData("EncoderRPM", EncoderRPM);
             panelsTelemetry.addData("OutputVolts", outputVolt);
             panelsTelemetry.addData("ShooterPercentError", shooterPercentError);
+            panelsTelemetry.addData("AutoShootState", shootState.toString());
+            panelsTelemetry.addData("TurnValue", turn);
+            panelsTelemetry.addData("Battery Voltage", batteryVolt);
 
-
+//        while (Result.getTx() < 2.5) {
+//            lfMotor.setPower(1);
+//            lbMotor.setPower(1);
+//            rfMotor.setPower(0);
+//            rbMotor.setPower(0);
+//            in2Motor.setPower(1);
+//        }
+//        while (Result.getTx() > -2.5) {
+//            lfMotor.setPower(0);
+//            lbMotor.setPower(0);
+//            rfMotor.setPower(1);
+//            rbMotor.setPower(1);
+//            in2Motor.setPower(1);
+//        }
+//
+//        if (runtime.seconds() > targetTimeSeconds && runtime.seconds() < targetTimeSeconds2) {
+//            lfMotor.setPower(0);
+//            lbMotor.setPower(0);
+//            rfMotor.setPower(0);
+//            rbMotor.setPower(0);
+//        }
+            panelsTelemetry.update(telemetry);
         }
-
+        while (opModeIsActive()  &&  runtime.seconds() < 27)  {
+            lfMotor.setPower(0.6);
+            lbMotor.setPower(0.6);
+            rfMotor.setPower(0.6);
+            rbMotor.setPower(0.6);
+            in2Motor.setPower(0.6);
+        }
     }
+
 }
+

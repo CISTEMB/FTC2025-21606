@@ -43,7 +43,7 @@ public class AutoBlueUp extends LinearOpMode {
 
     public static double kStP = 0.032;
     public static double kStF = 0.002;
-    public static double kLlF = 0.03;
+    public static double kLlF = 0.05;
     public static double kTestRPM = 3000;
     public static double kHdDown = 0;
     public static double kHdUP = 0.3; //5 teeth

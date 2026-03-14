@@ -45,7 +45,7 @@ public class TeleopAuto extends LinearOpMode {
     public double kLLP = 0.03;
     public double kTestRPM = 3000;
     public  double kHdDown = 0;
-    public  double kHdUP = 0.3; //5 teeth
+    public  double kHdUP = 0.35; //5 teeth
     public  double kmaxShooterPercentError = 0.05;
     public double kvelocityDipPercent = 0.1;
 
@@ -275,7 +275,6 @@ public class TeleopAuto extends LinearOpMode {
                 }
 
                 gamepad1.left_stick_y *= Math.abs(gamepad1.left_stick_y);
-                gamepad1.left_stick_x *= Math.abs(gamepad1.left_stick_x);
 
                 gamepad1.right_stick_x *= Math.abs(gamepad1.right_stick_x);
                 y = -gamepad1.left_stick_y;
@@ -298,8 +297,8 @@ public class TeleopAuto extends LinearOpMode {
                 inMotor.setPower(-0.5);
                 in2Motor.setPower(-0.5);
             } else {
-                inMotor.setPower(0.5);
-                in2Motor.setPower(0.5);
+                inMotor.setPower(0.8);
+                in2Motor.setPower(0.8);
             }
             if (gamepad2.left_bumper){
                 GoalRPM = 3515;
