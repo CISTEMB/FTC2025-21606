@@ -16,5 +16,8 @@ public class TeleOpV2 extends RobotBase {
         CommandGamepad1.leftBumper().whileHeld(intake.out());
 
         //Gamepad 2
+        CommandGamepad2.dpadDown().whenPressed(hood.down());
+        CommandGamepad2.dpadUp().whenPressed(hood.up());
+
     }
 }

@@ -29,25 +29,14 @@ public class Feeder extends SubsystemBase {
 
     public Command in() {
         return Commands.runEnd(
-                () -> {
-                        servo.setPower(1);
-
-                },
-                () -> {
-                    servo.setPower(0.0);
-                }
-
-
+                () -> servo.setPower(1),
+                this
         );
     }
     public Command out() {
         return Commands.runEnd(
-                () -> {
-                    servo.setPower(-1);
-                },
-                () -> {
-                    servo.setPower(0.0);
-                }
+                () -> servo.setPower(-1),
+                this
 
         );
     }

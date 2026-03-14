@@ -6,6 +6,7 @@ import com.seattlesolvers.solverslib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.V2.Libs.CommandGamepad;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Feeder;
+import org.firstinspires.ftc.teamcode.V2.Subsystems.Hood;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Intake;
 
 public abstract class RobotBase extends CommandOpMode {
@@ -14,6 +15,8 @@ public abstract class RobotBase extends CommandOpMode {
     //Subsystems
 protected Intake intake;
 protected Feeder feeder;
+protected Hood hood;
+
 
     //OI
     protected CommandGamepad CommandGamepad1 = new CommandGamepad(gamepad1);
@@ -31,6 +34,8 @@ protected Feeder feeder;
 
         intake = new Intake(hardwareMap, joinedTelemetry);
         feeder = new Feeder(hardwareMap, joinedTelemetry);
+        hood = new Hood(hardwareMap, joinedTelemetry);
+
 
 
         configureButtonBindings();
