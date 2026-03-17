@@ -20,7 +20,7 @@ public class Shooter extends SubsystemBase {
     public double kStP = 0.032;
     public double kStF = 0.002;
     public  double kAtGoalPercentError = 0.05;
-    public double kvelocityDipPercent = 0.1;
+    public double kVelocityDipPercent = 0.1;
 
     //Hardware
     private final DcMotorEx motor1;
@@ -50,16 +50,18 @@ public class Shooter extends SubsystemBase {
 
     }
 
-    public double getPercentError{
+    public double getPercentError() {
         return percentError;
     }
+
+
 
     public boolean isAtGoalRPM() {
         return Math.abs(percentError) < kAtGoalPercentError;
     }
 
     public boolean hasShoot() {
-        return Math.abs(percentError) > kvelocityDipPercent;
+        return Math.abs(percentError) > kVelocityDipPercent;
     }
 
     public Command setRPM(double rpm) {

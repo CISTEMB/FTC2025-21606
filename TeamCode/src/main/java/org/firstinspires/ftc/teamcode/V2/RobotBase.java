@@ -5,19 +5,23 @@ import com.bylazar.telemetry.PanelsTelemetry;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 
 import org.firstinspires.ftc.teamcode.V2.Libs.CommandGamepad;
+import org.firstinspires.ftc.teamcode.V2.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Feeder;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Hood;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Shooter;
+import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 
 public abstract class RobotBase extends CommandOpMode {
 
 
     //Subsystems
-protected Intake intake;
-protected Feeder feeder;
-protected Hood hood;
-protected Shooter shooter;
+    protected Vision vision;
+    protected Intake intake;
+    protected Feeder feeder;
+    protected Hood hood;
+    protected Shooter shooter;
+    protected Drive drive;
 
 
     //OI
@@ -38,6 +42,10 @@ protected Shooter shooter;
         feeder = new Feeder(hardwareMap, joinedTelemetry);
         hood = new Hood(hardwareMap, joinedTelemetry);
         shooter = new Shooter(hardwareMap, joinedTelemetry);
+        vision = new Vision(hardwareMap, joinedTelemetry);
+        drive = new Drive(hardwareMap, joinedTelemetry);
+
+
 
 
 

@@ -211,7 +211,7 @@ public final class Commands {
      *
      * @param supplier the command supplier
      * @return the command
-//     * @see ProxyCommand
+    //     * @see ProxyCommand
      * @see DeferredCommand
      */
 //    public static Command deferredProxy(Supplier<Command> supplier) {
