@@ -7,6 +7,7 @@ import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.WaitCommand;
 
+import org.firstinspires.ftc.teamcode.v2.commands.AlignWithTargetCommand;
 import org.firstinspires.ftc.teamcode.v2.lib.CommandGamepad;
 import org.firstinspires.ftc.teamcode.v2.lib.Commands;
 import org.firstinspires.ftc.teamcode.v2.subsystems.Drive;
@@ -21,10 +22,6 @@ import java.util.Optional;
 @Configurable
 public abstract class RobotBase extends CommandOpMode {
 
-    //
-    // Constants
-    //
-    public static double kLLP = 0.03;
 
     //
     // Subsystems
@@ -49,6 +46,8 @@ public abstract class RobotBase extends CommandOpMode {
 
     @Override
     public void initialize() {
+        reset(); // TODO should add this
+
         joinedTelemetry = new JoinedTelemetry(
                 PanelsTelemetry.INSTANCE.getFtcTelemetry(),
                 telemetry
@@ -78,19 +77,7 @@ public abstract class RobotBase extends CommandOpMode {
     //
 
     public Command visionAlign() {
-        return Commands.runEnd(
-                ()-> {
-                    // Do the P controller stuff
-                    Optional<Double> angle = vision.getHorizontalAngle();
-                    if (angle.isPresent()) {
-                        drive.arcade(0, angle.get() * kLLP, 0);
-                    } else {
-                        drive.stop();
-                    }
-                },
-                () -> drive.stop(),
-                drive
-        );
+        return new AlignWithTargetCommand(drive, vision, joinedTelemetry);
     }
 
     private double latchedRPM;
