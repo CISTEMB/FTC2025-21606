@@ -73,25 +73,25 @@ public abstract class RobotBase extends CommandOpMode {
 
     // Commands
 
-    public Command visionAlign() {
-        Command command;
-        command = Commands.runEnd(
-                () -> {
-                    // Do the P controller stuff
-                    Optional<Double> angle = vision.getHorizontalAngle();
-                    if (angle.isPresent()) {
-                        drive.arcadeDrive(0, angle.get() * kLLP, 0);
-                    } else {
-                        drive.stop();
-                    }
-                },
-                () -> {
-                    drive.stop();
-                },
-                drive
-        );
-        return command;
-    }
+//    public Command visionAlign() {
+//        Command command;
+//        command = Commands.runEnd(
+//                () -> {
+//                    // Do the P controller stuff
+//                    Optional<Double> angle = vision.getHorizontalAngle();
+//                    if (angle.isPresent()) {
+//                        drive.arcadeDrive(0, angle.get() * kLLP, 0);
+//                    } else {
+//                        drive.stop();
+//                    }
+//                },
+//                () -> {
+//                    drive.stop();
+//                },
+//                drive
+//        );
+//        return command;
+//    }
 
     private double latchedRPM;
     public Command visionShoot() {

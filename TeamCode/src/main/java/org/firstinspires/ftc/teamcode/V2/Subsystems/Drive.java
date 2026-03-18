@@ -14,6 +14,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 public class Drive extends SubsystemBase {
     private final Follower follower;
+    public Follower getFollower(){
+        return follower;
+    }
     public Drive(HardwareMap hw, Telemetry telemetry){
 
         follower = Constants.createFollower(hw);
@@ -27,9 +30,6 @@ public class Drive extends SubsystemBase {
 
     public void arcadeDrive(double foward, double turn, int strafe)
     {
-
-    }
-    public void stop(){
 
     }
 
@@ -53,7 +53,7 @@ public class Drive extends SubsystemBase {
                         strafe *= 0.6;
                         turn *= 0.6;
                     }
-                    
+
                     follower.setTeleOpDrive(foward, strafe, turn);
                 },
                 //end
