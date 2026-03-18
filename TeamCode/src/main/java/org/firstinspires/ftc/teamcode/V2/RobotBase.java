@@ -42,6 +42,7 @@ public abstract class RobotBase extends CommandOpMode {
 
     @Override
     public void initialize() {
+        reset();
         joinedTelemetry = new JoinedTelemetry(
         PanelsTelemetry.INSTANCE.getFtcTelemetry(),
         telemetry);

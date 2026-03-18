@@ -11,6 +11,7 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -27,7 +28,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.nio.file.Paths;
 import java.util.Locale;
-
+@Disabled
 @Autonomous(name = "AutoBlueUp")
 public class AutoBlueUp extends LinearOpMode {
 

@@ -15,6 +15,7 @@ public class TeleOpV2 extends RobotBase {
         // Defaults
 
         intake.setDefaultCommand(intake.in());
+        drive.setDefaultCommand(drive.driveWithGamepad(gamepad1));
 
 
         // Gamepad 1
@@ -23,7 +24,7 @@ public class TeleOpV2 extends RobotBase {
 
         // Gamepad 2
 
-        CommandGamepad2.a().whileHeld(visionShoot());
+        CommandGamepad2.a().whileHeld(visionShoot2());
 
         CommandGamepad2.dpadUp().whenPressed(hood.up());
         CommandGamepad2.dpadDown().whenPressed(hood.down());
