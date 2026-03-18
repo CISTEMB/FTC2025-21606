@@ -27,14 +27,14 @@ public class Vision extends SubsystemBase {
     }
 
 
-    //
+
     // Hardware
-    //
+
     private final Limelight3A limelight;
 
-    //
+
     // State
-    //
+
     private final InterpLUT rpmLookup = new InterpLUT();
     private LLResult lastResult;
 
@@ -71,17 +71,20 @@ public class Vision extends SubsystemBase {
         return Commands.runOnce(() -> limelight.pipelineSwitch(pipeline.pipeline));
     }
 
+    public boolean isValid() {
+        return lastResult == null || !lastResult.isValid();
+    }
 
-    public Optional<Double> getHorizontalAngle() {
-        if (lastResult == null || !lastResult.isValid()) {
-            return Optional.empty();
+    public double getHorizontalAngle() {
+        if (isValid()) {
+            return lastResult.getTx();
         }
 
-        return Optional.of(lastResult.getTx());
+        return 0;
     }
 
     public Optional<Double> getTargetDistance() {
-        if (lastResult == null || !lastResult.isValid()) {
+        if (isValid()) {
             return Optional.empty();
         }
 
@@ -106,16 +109,16 @@ public class Vision extends SubsystemBase {
         return 0;
     }
 
+    public boolean isAligned() {
+        if(isValid()) {
+            return Math.abs(getHorizontalAngle()) < 2.5;
+        }
 
-    public boolean isAlligned(){
-        if(lastResult.isValid()) {
-                return Math.abs(getHorizontalAngle()) < 2.5;
-            }
         return false;
     }
+
     public Command waitForAlignment() {
-        return Commands.waitUntil(this::isAlligned)
-        });
+        return Commands.waitUntil(this::isAligned);
     }
 
     @Override
