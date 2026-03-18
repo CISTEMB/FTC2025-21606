@@ -71,16 +71,20 @@ public class Vision extends SubsystemBase {
         return Commands.runOnce(() -> limelight.pipelineSwitch(pipeline.pipeline));
     }
 
-    public Optional<Double> getHorizontalAngle() {
-        if (lastResult == null || !lastResult.isValid()) {
-            return Optional.empty();
+    public boolean isValid() {
+        return lastResult == null || !lastResult.isValid();
+    }
+
+    public double getHorizontalAngle() {
+        if (isValid()) {
+            return lastResult.getTx();
         }
 
-        return Optional.of(lastResult.getTx());
+        return 0;
     }
 
     public Optional<Double> getTargetDistance() {
-        if (lastResult == null || !lastResult.isValid()) {
+        if (isValid()) {
             return Optional.empty();
         }
 
@@ -105,15 +109,16 @@ public class Vision extends SubsystemBase {
         return 0;
     }
 
-    public Command waitForAlignment() {
-        return Commands.waitUntil( () -> {
-            Optional<Double> angle = getHorizontalAngle();
-            if(angle.isPresent()) {
-                return Math.abs(angle.get()) < 2.5;
-            }
+    public boolean isAligned() {
+        if(isValid()) {
+            return Math.abs(getHorizontalAngle()) < 2.5;
+        }
 
-            return false;
-        });
+        return false;
+    }
+
+    public Command waitForAlignment() {
+        return Commands.waitUntil(this::isAligned);
     }
 
     @Override

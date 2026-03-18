@@ -270,10 +270,11 @@ public class TeleopAuto extends LinearOpMode {
                 autoShootState = AutoShootState.kIdle;
 
                 //slow Mode
+                // Ryan: I'm not really sure what is going on here
                 if (gamepad1.right_trigger > 0.5){
                     gamepad1.left_stick_y *= Math.abs(gamepad1.left_stick_y) - 0.3;
                     gamepad1.left_stick_x *= Math.abs(gamepad1.left_stick_x) -0.3;
-                    gamepad1.right_stick_x *= Math.abs(gamepad2.right_stick_x) - 0.3;
+                    gamepad1.right_stick_x *= Math.abs(gamepad2.right_stick_x) - 0.3; // Mixing gamepads
                 }
 
                 gamepad1.left_stick_y *= Math.abs(gamepad1.left_stick_y);
