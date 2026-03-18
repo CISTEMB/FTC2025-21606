@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
-import com.seattlesolvers.solverslib.hardware.motors.Motor;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
@@ -43,7 +42,8 @@ public class Intake extends SubsystemBase {
         () -> {
                     motor1.setPower(0.0);
                   motor2.setPower(0.0);
-        }
+        },
+                this
 
         );
     }
@@ -56,9 +56,10 @@ public class Intake extends SubsystemBase {
                 () -> {
                     motor1.setPower(0.0);
                     motor2.setPower(0.0);
-                }
-
+                },
+this
         );
+
     }
 
 }

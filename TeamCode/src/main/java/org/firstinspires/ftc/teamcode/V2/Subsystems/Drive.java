@@ -10,7 +10,7 @@ public class Drive extends SubsystemBase {
     public Drive(HardwareMap hw, Telemetry telemetry){
 
     }
-    public void arcadeDrive()
+    public void arcadeDrive(int i, double v, int i1)
     {
 
     }

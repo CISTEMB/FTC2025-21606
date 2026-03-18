@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.V2;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.seattlesolvers.solverslib.command.Command;
 
+import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 
 @TeleOp(name="TeleOpV2")
@@ -21,7 +23,7 @@ public class TeleOpV2 extends RobotBase {
 
         // Gamepad 2
 
-        //CommandGamepad2.a().whileHeld(visionShoot());
+        CommandGamepad2.a().whileHeld(visionShoot());
 
         CommandGamepad2.dpadUp().whenPressed(hood.up());
         CommandGamepad2.dpadDown().whenPressed(hood.down());
@@ -34,5 +36,9 @@ public class TeleOpV2 extends RobotBase {
         CommandGamepad2.leftBumper().whileHeld(shooter.setRPM(3515));
         CommandGamepad2.x().whileHeld(feeder.in());
     }
-}
 
+    public Command visionShoot() {
+
+        return null;
+    }
+}
