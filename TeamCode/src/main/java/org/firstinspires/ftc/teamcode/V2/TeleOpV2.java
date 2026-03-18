@@ -37,8 +37,5 @@ public class TeleOpV2 extends RobotBase {
         CommandGamepad2.x().whileHeld(feeder.in());
     }
 
-    public Command visionShoot() {
 
-        return null;
-    }
 }
