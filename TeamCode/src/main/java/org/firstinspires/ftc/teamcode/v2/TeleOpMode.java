@@ -13,6 +13,7 @@ public class TeleOpMode extends RobotBase {
         // Defaults
         //
         intake.setDefaultCommand(intake.in());
+        drive.setDefaultCommand(drive.driveWithGamepad(gamepad1));
 
         //
         // Gamepad 1
