@@ -21,10 +21,7 @@ import java.util.Optional;
 @Configurable
 public abstract class RobotBase extends CommandOpMode {
 
-    //
-    // Constants
-    //
-    public static double kLLP = 0.03;
+
 
     //
     // Subsystems
@@ -80,19 +77,20 @@ public abstract class RobotBase extends CommandOpMode {
     //
 
     public Command visionAlign() {
-        return Commands.runEnd(
-                ()-> {
-                    // Do the P controller stuff
-                    Optional<Double> angle = vision.getHorizontalAngle();
-                    if (angle.isPresent()) {
-                        drive.arcade(0, angle.get() * kLLP, 0);
-                    } else {
-                        drive.stop();
-                    }
-                },
-                () -> drive.stop(),
-                drive
-        );
+        return Commands.idle();
+//        return Commands.runEnd(
+//                ()-> {
+//                    // Do the P controller stuff
+//                    Optional<Double> angle = vision.getHorizontalAngle();
+//                    if (angle.isPresent()) {
+//                        drive.arcade(0, angle.get() * kLLP, 0);
+//                    } else {
+//                        drive.stop();
+//                    }
+//                },
+//                () -> drive.stop(),
+//                drive
+//        );
     }
 
     private double latchedRPM;

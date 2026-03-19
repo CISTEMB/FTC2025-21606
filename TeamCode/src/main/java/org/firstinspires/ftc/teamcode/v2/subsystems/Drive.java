@@ -13,6 +13,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 public class Drive extends SubsystemBase {
 
     private final Follower follower;
+    public Follower getFollower() {
+        return follower;
+    }
 
     public Drive(HardwareMap hw, Telemetry telemetry) {
         follower = Constants.createFollower(hw);
@@ -23,13 +26,6 @@ public class Drive extends SubsystemBase {
         follower.update();
     }
 
-    public void arcade(double forward, double turn, double strafe) {
-
-    }
-
-    public void stop() {
-
-    }
 
     public Command driveWithGamepad(Gamepad gamepad) {
         return new FunctionalCommand(
