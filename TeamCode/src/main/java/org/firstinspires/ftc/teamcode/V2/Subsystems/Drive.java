@@ -28,7 +28,7 @@ public class Drive extends SubsystemBase {
         follower.update();
     }
 
-    public void arcadeDrive(double foward, double turn, int strafe)
+    public void arcadeDrive(double foward, double turn, double strafe)
     {
 
     }
@@ -43,6 +43,7 @@ public class Drive extends SubsystemBase {
                     double strafe = -gamepad.left_stick_x;
                     double turn = -gamepad.right_stick_x;
 
+
                     foward *= Math.abs(foward);
                     strafe *= Math.abs(strafe);
                     turn *= Math.abs(turn);
@@ -54,7 +55,7 @@ public class Drive extends SubsystemBase {
                         turn *= 0.6;
                     }
 
-                    follower.setTeleOpDrive(foward, strafe, turn);
+                    follower.setTeleOpDrive(foward, strafe, turn, false);
                 },
                 //end
         (interrupted) -> {

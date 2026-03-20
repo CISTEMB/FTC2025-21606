@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.V1;
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -40,7 +41,7 @@ public class TeleopMan extends LinearOpMode {
     private CRServo hdMotor;
     private CRServo in2Motor;
     private Limelight3A limelight;
-    org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver odo;
+    GoBildaPinpointDriver odo;
 
 
     @Override
@@ -57,7 +58,7 @@ public class TeleopMan extends LinearOpMode {
             hdMotor = hardwareMap.get(CRServo.class, "HoodMotor");
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(CRServo.class, "Intake2Motor");
-            odo = hardwareMap.get(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.class, "pinpoint");
+            odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
             telemetry.setMsTransmissionInterval(11);
 
@@ -82,8 +83,8 @@ public class TeleopMan extends LinearOpMode {
         stMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 
-        odo.setEncoderResolution(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
-        odo.setEncoderDirections(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.EncoderDirection.FORWARD, org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
 
 

@@ -6,6 +6,7 @@ import com.bylazar.telemetry.JoinedTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
+import com.seattlesolvers.solverslib.command.ConditionalCommand;
 
 
 import org.firstinspires.ftc.teamcode.V2.Commands.AlignWithTargetCommand;
@@ -32,8 +33,8 @@ public abstract class RobotBase extends CommandOpMode {
 
 
     //OI
-    protected CommandGamepad CommandGamepad1 = new CommandGamepad(gamepad1);
-    protected CommandGamepad CommandGamepad2 = new CommandGamepad(gamepad2);
+    protected CommandGamepad commandGamepad1;
+    protected CommandGamepad commandGamepad2;
 
     //Helpers
 
@@ -41,6 +42,9 @@ public abstract class RobotBase extends CommandOpMode {
 
     @Override
     public void initialize() {
+        commandGamepad1 = new CommandGamepad(gamepad1);
+        commandGamepad2 = new CommandGamepad(gamepad2);
+
         reset();
         joinedTelemetry = new JoinedTelemetry(
                 PanelsTelemetry.INSTANCE.getFtcTelemetry(),
@@ -74,15 +78,24 @@ public abstract class RobotBase extends CommandOpMode {
 
 
     private double latchedRPM;
+    private double latchedDistance;
 
     public Command visionShoot() {
         return Commands.parallel(
                 visionAlign(),
                 Commands.sequence(
                         vision.waitForAlignment(),
-                        Commands.runOnce(() -> latchedRPM = vision.getShooterRPM()),
+                        Commands.runOnce(() -> {
+                            latchedDistance = vision.getTargetDistance();
+                            latchedRPM = vision.getShooterRPM();
+                        }),
                         Commands.parallel(
                                 shooter.setRPM(() -> latchedRPM),
+                                new ConditionalCommand(
+                                    hood.up(),
+                                    hood.down(),
+                                    ()-> latchedDistance > 110
+                                ),
                                 Commands.sequence(
                                         Commands.waitUntil(() -> shooter.isAtGoalRPM()),
                                         feeder.out()

@@ -17,7 +17,7 @@ public class Feeder extends SubsystemBase {
     private final Telemetry telemetry;
 
     public Feeder(HardwareMap hw, Telemetry telemetry) {
-        servo = hw.get(CRServo.class, "IntakeMotor");
+        servo = hw.get(CRServo.class, "FeederMotor");
 
 
 

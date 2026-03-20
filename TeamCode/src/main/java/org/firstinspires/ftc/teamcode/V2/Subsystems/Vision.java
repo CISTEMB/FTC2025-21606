@@ -83,7 +83,7 @@ public class Vision extends SubsystemBase {
         return 0;
     }
 
-    public Optional<Double> getTargetDistance() {
+    public double getTargetDistance() {
         if (isValid()) {
             return Optional.empty();
         }

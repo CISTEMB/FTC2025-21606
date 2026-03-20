@@ -6,6 +6,7 @@ import static java.lang.Math.tan;
 
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -74,7 +75,7 @@ public class TeleopAuto extends LinearOpMode {
     double GoalRPM;
     private double shooterPercentError;
     private double LatchedLLDistance;
-    org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver odo;
+    GoBildaPinpointDriver odo;
     //TelemetryManager set to Panels
     TelemetryManager panelsTelemetry;
     @Override
@@ -94,7 +95,7 @@ public class TeleopAuto extends LinearOpMode {
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(DcMotor.class, "Intake2Motor");
             FeederMotor = hardwareMap.get(CRServo.class, "FeederMotor");
-            odo = hardwareMap.get(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.class, "pinpoint");
+            odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
             leftRGB = new org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator(hardwareMap, "LeftRGB");
             rightRGB = new org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator(hardwareMap, "RightRGB");
@@ -103,7 +104,6 @@ public class TeleopAuto extends LinearOpMode {
             limelight.start();
             limelight.pipelineSwitch(3);
             odo.setOffsets(4, 0, DistanceUnit.INCH);
-            odo.setPosition(72, 98);
 
 
             //LUT Values
@@ -152,8 +152,8 @@ public class TeleopAuto extends LinearOpMode {
 
         //Constants Setup
 
-        odo.setEncoderResolution(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.GoBaldaOdometryPods.goBALDA_4_BAR_POD);
-        odo.setEncoderDirections(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.EncoderDirection.FORWARD, org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.EncoderDirection.FORWARD);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
         hdMotor.setPosition(0);
 

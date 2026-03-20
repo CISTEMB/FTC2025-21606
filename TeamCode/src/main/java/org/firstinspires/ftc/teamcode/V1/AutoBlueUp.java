@@ -8,6 +8,7 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -54,7 +55,8 @@ public class AutoBlueUp extends LinearOpMode {
     private int pathState; // Current autonomous path state (state machine)
     private Paths paths; // Paths defined in the Paths class
     private final Pose Target_Location = new Pose(72, 78);
-    org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver odo;
+
+    GoBildaPinpointDriver odo;
 
 
     private DcMotor lfMotor;
@@ -103,7 +105,7 @@ public class AutoBlueUp extends LinearOpMode {
             inMotor = hardwareMap.get(DcMotor.class, "IntakeMotor");
             in2Motor = hardwareMap.get(DcMotor.class, "Intake2Motor");
             FeederMotor = hardwareMap.get(CRServo.class, "FeederMotor");
-            odo = hardwareMap.get(org.firstinspires.ftc.teamcode.Hardware.V1.GoBaldaPinpointDriver.class, "pinpoint");
+            odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
             panelsTelemetry.debug(11);
             panelsTelemetry.debug(11);
