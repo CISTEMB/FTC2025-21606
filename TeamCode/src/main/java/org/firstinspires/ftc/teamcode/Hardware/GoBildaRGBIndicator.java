@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.V1;
+package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.bylazar.lights.RGBIndicator;
 import com.qualcomm.robotcore.hardware.HardwareMap;

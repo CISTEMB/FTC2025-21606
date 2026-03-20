@@ -75,6 +75,9 @@ public class Vision extends SubsystemBase {
         return lastResult == null || !lastResult.isValid();
     }
 
+    public int pipeline(){
+        return lastResult.getPipelineIndex();
+    }
     public double getHorizontalAngle() {
         if (isValid()) {
             return lastResult.getTx();
