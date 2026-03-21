@@ -13,13 +13,14 @@ import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 @Configurable
 public class AlignWithTargetCommand extends CommandBase {
     public static double kLLP = 0.03;
-    public static double kMinPower = 0.2;
+    public static double kMinPower = 0.1;
 
-    private final Debouncer onTargetDebouncer = new Debouncer(0.25);
+    private final Debouncer onTargetDebouncer = new Debouncer(5, Debouncer.DebounceType.Both);
 
     private final Drive drive;
     private final Vision vision;
     private final Telemetry telemetry;
+    private boolean isAligned;
 
 
     public AlignWithTargetCommand(Drive drive, Vision vision, Telemetry t) {
@@ -33,13 +34,15 @@ public class AlignWithTargetCommand extends CommandBase {
     public void initialize() {
         onTargetDebouncer.reset(false);
         drive.getFollower().startTeleopDrive();
+        isAligned = false;
+        onTargetDebouncer.calculate(false);
     }
 
     @Override
     public void execute() {
         if (vision.isValid()) {
             double angle = vision.getHorizontalAngle();
-            double turn = angle * kLLP;
+            double turn = -angle * kLLP;
 
            //If stuck in turn
             if (Math.abs(turn) < kMinPower) {
@@ -49,13 +52,18 @@ public class AlignWithTargetCommand extends CommandBase {
             telemetry.addData("AlignWithTarget: Turn", turn);
 
             drive.getFollower().setTeleOpDrive(0, 0, turn, true);
+        } else {
+            drive.getFollower().setTeleOpDrive(0, 0, 0);
         }
-
+        isAligned = onTargetDebouncer.calculate(vision.isAligned());
+        telemetry.addData("AlignWithTarget: isAligned", isAligned);
     }
 
     @Override
     public boolean isFinished() {
-        return onTargetDebouncer.calculate(vision.isAligned());
+//        return onTargetDebouncer.calculate(vision.isAligned());
+       // return isAligned;
+        return false;
     }
 
     @Override

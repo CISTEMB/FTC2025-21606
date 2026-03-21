@@ -73,7 +73,14 @@ public abstract class RobotBase extends CommandOpMode {
         joinedTelemetry.update();
     }
 
-
+    public void setRedAlliance(){
+        vision.setPipeline(Vision.Pipeline.kRedOnly);
+        drive.setHeadingOffset(Math.toRadians(0));
+    }
+    public void setBlueAlliance(){
+        vision.setPipeline(Vision.Pipeline.kBlueOnly);
+        drive.setHeadingOffset(Math.toRadians(180));
+    }
     // Commands
 
     public Command visionAlign() {

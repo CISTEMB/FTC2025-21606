@@ -13,16 +13,16 @@ import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 public class Drive extends SubsystemBase {
     // Field Centric Constants
-    double redForward = 0;
-    double blueForward = Math.PI;
-    double currentForward;
-    double robotHeading_Rad;
+
     //Hardware
     private final Follower follower;
-    private Follower pinpoint;
-
     public Follower getFollower(){
         return follower;
+    }
+    private double headingOffset_Rad;
+    public void setHeadingOffset(double radians){
+        headingOffset_Rad = radians;
+
     }
     public Drive(HardwareMap hw, Telemetry telemetry){
 
@@ -34,7 +34,6 @@ public class Drive extends SubsystemBase {
     @Override
     public void periodic() {
         follower.update();
-        pinpoint.update();
     }
 
     public void arcadeDrive(double foward, double turn, double strafe)
@@ -43,15 +42,15 @@ public class Drive extends SubsystemBase {
     }
 
     public Command setForward() {
-        return Commands.runOnce(() -> currentForward = robotHeading_Rad
+        return Commands.runOnce(() -> follower.setHeading(0)
         );}
-    public Command driveWithGamepad(Gamepad gamepad) {
+    public Command driveWithGamepad
+            (Gamepad gamepad) {
         return new FunctionalCommand(
                 //init
                 () -> follower.startTeleOpDrive(),
                 //excuete
                 () -> {
-                    robotHeading_Rad = pinpoint.getHeading();
                     double foward = -gamepad.left_stick_y;
                     double strafe = -gamepad.left_stick_x;
                     double turn = -gamepad.right_stick_x;
@@ -68,7 +67,7 @@ public class Drive extends SubsystemBase {
                         turn *= 0.6;
                     }
 
-                    follower.setTeleOpDrive(foward, strafe, turn, false, currentForward);
+                    follower.setTeleOpDrive(foward, strafe, turn, false, headingOffset_Rad);
                 },
                 //end
         (interrupted) -> {

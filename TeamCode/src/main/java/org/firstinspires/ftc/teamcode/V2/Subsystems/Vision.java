@@ -37,6 +37,7 @@ public class Vision extends SubsystemBase {
 
     private final InterpLUT rpmLookup = new InterpLUT();
     private LLResult lastResult;
+    private final Telemetry telemetry;
 
 
 
@@ -66,17 +67,21 @@ public class Vision extends SubsystemBase {
         rpmLookup.add(1000,3555);
 
         rpmLookup.createLUT();
+        this.telemetry = telemetry;
     }
 
-    public Command setPipeline(Pipeline pipeline) {
-        return Commands.runOnce(() -> limelight.pipelineSwitch(pipeline.pipeline));
+    public void setPipeline(Pipeline pipeline) {
+        limelight.pipelineSwitch(pipeline.pipeline);
     }
 
     public boolean isValid() {
-        return lastResult == null || !lastResult.isValid();
+        return lastResult != null && lastResult.isValid();
     }
 
     public int pipeline(){
+        if (!isValid()){
+            return -1;
+        }
         return lastResult.getPipelineIndex();
     }
     public double getHorizontalAngle() {
@@ -129,5 +134,11 @@ public class Vision extends SubsystemBase {
     public void periodic() {
         //Limelight Data
         lastResult = limelight.getLatestResult();
+        telemetry.addData("Vision:Raw:isValid", lastResult.isValid());
+        telemetry.addData("Vision:Raw:Pipeline", lastResult.getPipelineIndex());
+        telemetry.addData("Vision:ShooterRPM", getShooterRPM());
+        telemetry.addData("Vision:Aligned", isAligned());
+        telemetry.addData("Vision:Horizontal Angle", getHorizontalAngle());
+        telemetry.addData("Vision:Pipeline", pipeline());
     }
 }

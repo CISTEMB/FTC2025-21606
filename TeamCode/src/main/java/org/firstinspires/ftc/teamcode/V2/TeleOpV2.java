@@ -2,12 +2,28 @@ package org.firstinspires.ftc.teamcode.V2;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Lights;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 
-@TeleOp(name="TeleOpV2")
-public class TeleOpV2 extends RobotBase {
+public abstract class TeleOpV2 extends RobotBase {
 
+   @TeleOp(group = "Blue")
+    public static class TeleOpBlue extends TeleOpV2 {
+        @Override
+        public void initialize() {
+            super.initialize();
+            setBlueAlliance();
+        }
+    }
+   @TeleOp(group = "Red")
+    public static class TeleOpRed extends TeleOpV2 {
+        @Override
+        public void initialize() {
+            super.initialize();
+            setRedAlliance();
+        }
+    }
     @Override
     protected void configureButtonBindings() {
 
@@ -30,8 +46,8 @@ public class TeleOpV2 extends RobotBase {
         commandGamepad2.dpadUp().whenPressed(hood.up());
         commandGamepad2.dpadDown().whenPressed(hood.down());
 
-        commandGamepad2.back().whenPressed(vision.setPipeline(Vision.Pipeline.kBlueOnly));
-        commandGamepad2.start().whenPressed(vision.setPipeline(Vision.Pipeline.kRedOnly));
+        commandGamepad2.back().whenPressed(Commands.runOnce( ()-> setRedAlliance()));
+        commandGamepad2.start().whenPressed(Commands.runOnce( ()-> setBlueAlliance()));
 
         // Manual Shooter control
         commandGamepad2.rightBumper().whileHeld(shooter.setRPM(-6000));
