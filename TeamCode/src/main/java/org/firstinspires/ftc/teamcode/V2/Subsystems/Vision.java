@@ -60,6 +60,7 @@ public class Vision extends SubsystemBase {
         rpmLookup.add(80.0, 3375);
         rpmLookup.add(81.0, 0);
         rpmLookup.add(105, 0);
+        rpmLookup.add(106, 3515);
         rpmLookup.add(110, 3515);
         rpmLookup.add(135, 3555);
         rpmLookup.add(1000,3555);
@@ -88,7 +89,7 @@ public class Vision extends SubsystemBase {
 
     public double getTargetDistance() {
         if (isValid()) {
-            return Optional.empty();
+            return 0;
         }
 
         double h2 = 29.5;
@@ -97,15 +98,15 @@ public class Vision extends SubsystemBase {
         double a1 = lastResult.getTy();
         double d = (h2 - h1) / tan((a1 + a2) * 0.017453292519943295);
 
-        return Optional.of(d);
+        return d;
     }
 
     public double getShooterRPM() {
-        Optional<Double> distance = getTargetDistance();
+        double distance = getTargetDistance();
 
-        if (distance.isPresent()) {
-            if (0<=distance.get() && distance.get()<=150) {
-                return rpmLookup.get(distance.get());
+        if (isValid()) {
+            if (0<=distance && distance<=150) {
+                return rpmLookup.get(distance);
             }
         }
 

@@ -24,6 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.Hardware.GoBildaRGBIndicator;
 
 import java.util.Locale;
 
@@ -67,8 +68,8 @@ public class TeleopAuto extends LinearOpMode {
 
     private Limelight3A limelight;
 
-    private org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator leftRGB;
-    private org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator rightRGB;
+    private GoBildaRGBIndicator leftRGB;
+    private GoBildaRGBIndicator rightRGB;
     //declare Auto shoot Enum
     private AutoShootState autoShootState = AutoShootState.kIdle;
     //Variable Import
@@ -97,8 +98,8 @@ public class TeleopAuto extends LinearOpMode {
             FeederMotor = hardwareMap.get(CRServo.class, "FeederMotor");
             odo = hardwareMap.get(GoBildaPinpointDriver.class, "pinpoint");
             limelight = hardwareMap.get(Limelight3A.class, "limelight");
-            leftRGB = new org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator(hardwareMap, "LeftRGB");
-            rightRGB = new org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator(hardwareMap, "RightRGB");
+            leftRGB = new GoBildaRGBIndicator(hardwareMap, "LeftRGB");
+            rightRGB = new GoBildaRGBIndicator(hardwareMap, "RightRGB");
             panelsTelemetry.debug(11);
 
             limelight.start();
@@ -176,14 +177,14 @@ public class TeleopAuto extends LinearOpMode {
 
             double pipeline = result.getPipelineIndex();
             if (result.isValid() && pipeline == 0) {
-                leftRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Red);
-                rightRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Red);
+                leftRGB.set(GoBildaRGBIndicator.Color.Red);
+                rightRGB.set(GoBildaRGBIndicator.Color.Red);
             } else if (result.isValid() && pipeline == 1) {
-                leftRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Blue);
-                rightRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Blue);
+                leftRGB.set(GoBildaRGBIndicator.Color.Blue);
+                rightRGB.set(GoBildaRGBIndicator.Color.Blue);
             } else {
-                leftRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Off);
-                rightRGB.set(org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator.Color.Off);
+                leftRGB.set(GoBildaRGBIndicator.Color.Off);
+                rightRGB.set(GoBildaRGBIndicator.Color.Off);
             }
 
             //Turn Values

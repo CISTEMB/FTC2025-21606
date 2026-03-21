@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.V2;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.JoinedTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.ConditionalCommand;
@@ -18,6 +19,7 @@ import org.firstinspires.ftc.teamcode.V2.Subsystems.Hood;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Intake;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Shooter;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
+import org.firstinspires.ftc.teamcode.V2.Subsystems.Lights;
 
 @Configurable
 public abstract class RobotBase extends CommandOpMode {
@@ -30,6 +32,7 @@ public abstract class RobotBase extends CommandOpMode {
     protected Hood hood;
     protected Shooter shooter;
     protected Drive drive;
+    protected Lights lights;
 
 
     //OI
@@ -56,6 +59,7 @@ public abstract class RobotBase extends CommandOpMode {
         hood = new Hood(hardwareMap, joinedTelemetry);
         shooter = new Shooter(hardwareMap, joinedTelemetry);
         drive = new Drive(hardwareMap, joinedTelemetry);
+        lights = new Lights(hardwareMap, joinedTelemetry);
 
 
         configureButtonBindings();
@@ -79,6 +83,8 @@ public abstract class RobotBase extends CommandOpMode {
 
     private double latchedRPM;
     private double latchedDistance;
+
+
 
     public Command visionShoot() {
         return Commands.parallel(

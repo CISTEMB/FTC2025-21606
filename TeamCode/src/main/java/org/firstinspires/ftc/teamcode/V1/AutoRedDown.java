@@ -23,6 +23,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.Hardware.GoBildaRGBIndicator;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
 
 import java.nio.file.Paths;
@@ -74,8 +75,8 @@ public class AutoRedDown extends LinearOpMode {
     private DcMotor in2Motor;
     private Servo hdMotor;
     private CRServo FeederMotor;
-    private org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator leftRGB;
-    private org.firstinspires.ftc.teamcode.Hardware.V1.GoBildaRGBIndicator rightRGB;
+    private GoBildaRGBIndicator leftRGB;
+    private GoBildaRGBIndicator rightRGB;
     private double GoalRPM;
     private double LatchedLLDistance;
     private double shooterPercentError;

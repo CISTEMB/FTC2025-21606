@@ -25,7 +25,17 @@ public class Lights extends SubsystemBase {
 
     public Command run(Vision vision) {
         return Commands.run(() -> {
-
+            int pipeline = vision.pipeline();
+            if (vision.isValid() && pipeline == 0){
+                left.set(GoBildaRGBIndicator.Color.Red);
+                right.set(GoBildaRGBIndicator.Color.Red);
+            } else if (vision.isValid() && pipeline == 1){
+                left.set(GoBildaRGBIndicator.Color.Blue);
+                right.set(GoBildaRGBIndicator.Color.Blue);
+            } else {
+                left.set(GoBildaRGBIndicator.Color.Off);
+                right.set(GoBildaRGBIndicator.Color.Off);
+            }
         });
     }
 }

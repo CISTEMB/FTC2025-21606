@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.V2;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.V2.Subsystems.Lights;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 
 @TeleOp(name="TeleOpV2")
@@ -14,12 +15,14 @@ public class TeleOpV2 extends RobotBase {
 
         intake.setDefaultCommand(intake.in());
         drive.setDefaultCommand(drive.driveWithGamepad(gamepad1));
+        lights.setDefaultCommand(lights.run(vision));
 
 
         // Gamepad 1
         commandGamepad1.leftBumper().whileHeld(intake.out());
 
 
+        commandGamepad1.back().whenPressed(drive.setForward());
         // Gamepad 2
 
         commandGamepad2.a().whileHeld(visionShoot());
