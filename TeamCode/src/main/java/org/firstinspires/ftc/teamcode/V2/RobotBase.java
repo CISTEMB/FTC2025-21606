@@ -8,6 +8,7 @@ import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.ConditionalCommand;
+import com.seattlesolvers.solverslib.command.RepeatCommand;
 
 
 import org.firstinspires.ftc.teamcode.V2.Commands.AlignWithTargetCommand;
@@ -101,16 +102,21 @@ public abstract class RobotBase extends CommandOpMode {
                     latchedDistance = vision.getTargetDistance();
                     latchedRPM = vision.getShooterRPM();
                 }),
-                Commands.parallel(
-                        shooter.setRPM(() -> latchedRPM),
-                        new ConditionalCommand(
-                                hood.up(),
-                                hood.down(),
-                                () -> latchedDistance > 110
-                        ),
-                        Commands.sequence(
-                                Commands.waitUntil(() -> shooter.isAtGoalRPM()),
-                                feeder.in()
+                new RepeatCommand(
+                        Commands.race(
+                                shooter.setRPM(() -> latchedRPM),
+                                new ConditionalCommand(
+                                        hood.up(),
+                                        hood.down(),
+                                        () -> latchedDistance > 110
+                                ),
+                                Commands.sequence(
+                                        Commands.waitUntil(() -> shooter.isAtGoalRPM()),
+                                        Commands.parallel(
+                                            intake.feed(),
+                                            feeder.in()
+                                        ).interruptOn(()-> shooter.hasShoot())
+                                )
                         )
                 )
         );

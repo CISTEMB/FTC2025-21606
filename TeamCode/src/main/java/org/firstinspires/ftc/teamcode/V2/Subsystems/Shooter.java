@@ -105,5 +105,6 @@ public class Shooter extends SubsystemBase {
         telemetry.addData("Shooter EncoderRPM", encoderRPM);
         telemetry.addData("Shooter OutputVolts", outputVolt);
         telemetry.addData("Shooter PercentError", percentError);
+        telemetry.addData("Shoot:hasShoot", hasShoot());
     }
 }

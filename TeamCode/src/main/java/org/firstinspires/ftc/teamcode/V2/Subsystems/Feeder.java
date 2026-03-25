@@ -19,7 +19,7 @@ public class Feeder extends SubsystemBase {
 
     public Feeder(HardwareMap hw, Telemetry telemetry) {
         servo = hw.get(CRServo.class, "FeederMotor");
-        
+
 
 
 
