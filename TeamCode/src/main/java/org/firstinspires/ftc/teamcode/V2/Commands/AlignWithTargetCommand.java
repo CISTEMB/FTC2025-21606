@@ -15,7 +15,7 @@ public class AlignWithTargetCommand extends CommandBase {
     public static double kLLP = 0.03;
     public static double kMinPower = 0.1;
 
-    private final Debouncer onTargetDebouncer = new Debouncer(5, Debouncer.DebounceType.Both);
+    private final Debouncer onTargetDebouncer = new Debouncer(1*1000, Debouncer.DebounceType.Both);
 
     private final Drive drive;
     private final Vision vision;
@@ -62,8 +62,8 @@ public class AlignWithTargetCommand extends CommandBase {
     @Override
     public boolean isFinished() {
 //        return onTargetDebouncer.calculate(vision.isAligned());
-       // return isAligned;
-        return false;
+        return isAligned;
+//        return false;
     }
 
     @Override

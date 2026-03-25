@@ -93,7 +93,7 @@ public class Vision extends SubsystemBase {
     }
 
     public double getTargetDistance() {
-        if (isValid()) {
+        if (!isValid()) {
             return 0;
         }
 
@@ -136,6 +136,7 @@ public class Vision extends SubsystemBase {
         lastResult = limelight.getLatestResult();
         telemetry.addData("Vision:Raw:isValid", lastResult.isValid());
         telemetry.addData("Vision:Raw:Pipeline", lastResult.getPipelineIndex());
+        telemetry.addData("Vision:TargetDistance", getTargetDistance());
         telemetry.addData("Vision:ShooterRPM", getShooterRPM());
         telemetry.addData("Vision:Aligned", isAligned());
         telemetry.addData("Vision:Horizontal Angle", getHorizontalAngle());

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.V2.Subsystems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
@@ -18,6 +19,7 @@ public class Feeder extends SubsystemBase {
 
     public Feeder(HardwareMap hw, Telemetry telemetry) {
         servo = hw.get(CRServo.class, "FeederMotor");
+        
 
 
 

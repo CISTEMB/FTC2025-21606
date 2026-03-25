@@ -73,13 +73,15 @@ public abstract class RobotBase extends CommandOpMode {
         joinedTelemetry.update();
     }
 
-    public void setRedAlliance(){
+
+    public void setRedAlliance() {
         vision.setPipeline(Vision.Pipeline.kRedOnly);
-        drive.setHeadingOffset(Math.toRadians(0));
-    }
-    public void setBlueAlliance(){
-        vision.setPipeline(Vision.Pipeline.kBlueOnly);
         drive.setHeadingOffset(Math.toRadians(180));
+    }
+
+    public void setBlueAlliance() {
+        vision.setPipeline(Vision.Pipeline.kBlueOnly);
+        drive.setHeadingOffset(Math.toRadians(0));
     }
     // Commands
 
@@ -92,27 +94,23 @@ public abstract class RobotBase extends CommandOpMode {
     private double latchedDistance;
 
 
-
     public Command visionShoot() {
-        return Commands.parallel(
+        return Commands.sequence(
                 visionAlign(),
-                Commands.sequence(
-                        vision.waitForAlignment(),
-                        Commands.runOnce(() -> {
-                            latchedDistance = vision.getTargetDistance();
-                            latchedRPM = vision.getShooterRPM();
-                        }),
-                        Commands.parallel(
-                                shooter.setRPM(() -> latchedRPM),
-                                new ConditionalCommand(
-                                    hood.up(),
-                                    hood.down(),
-                                    ()-> latchedDistance > 110
-                                ),
-                                Commands.sequence(
-                                        Commands.waitUntil(() -> shooter.isAtGoalRPM()),
-                                        feeder.out()
-                                )
+                Commands.runOnce(() -> {
+                    latchedDistance = vision.getTargetDistance();
+                    latchedRPM = vision.getShooterRPM();
+                }),
+                Commands.parallel(
+                        shooter.setRPM(() -> latchedRPM),
+                        new ConditionalCommand(
+                                hood.up(),
+                                hood.down(),
+                                () -> latchedDistance > 110
+                        ),
+                        Commands.sequence(
+                                Commands.waitUntil(() -> shooter.isAtGoalRPM()),
+                                feeder.in()
                         )
                 )
         );
