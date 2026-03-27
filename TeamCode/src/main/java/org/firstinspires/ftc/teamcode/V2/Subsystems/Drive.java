@@ -10,12 +10,14 @@ import com.seattlesolvers.solverslib.command.SubsystemBase;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 
 public class Drive extends SubsystemBase {
     // Field Centric Constants
 
     //Hardware
     private final Follower follower;
+    private Telemetry telemetry;
     public Follower getFollower(){
         return follower;
     }
@@ -25,10 +27,9 @@ public class Drive extends SubsystemBase {
 
     }
     public Drive(HardwareMap hw, Telemetry telemetry){
-
         follower = Constants.createFollower(hw);
 
-
+        this.telemetry = telemetry;
     }
 
     @Override
@@ -42,7 +43,7 @@ public class Drive extends SubsystemBase {
     }
 
     public Command setForward() {
-        return Commands.runOnce(() -> follower.setHeading(0)
+        return Commands.runOnce(() -> follower.setHeading(Math.toRadians(90))
         );}
     public Command driveWithGamepad
             (Gamepad gamepad) {
@@ -62,11 +63,14 @@ public class Drive extends SubsystemBase {
 
 
                     if (gamepad.right_trigger > 0.5) {
-                        foward *= 0.6;
-                        strafe *= 0.6;
-                        turn *= 0.6;
+                        foward *= 0.25;
+                        strafe *= 0.25;
+                        turn *= 0.25;
+                        telemetry.addData("Drive: SlowModeTrue", true);
+                    } else {
+                        telemetry.addData("Drive: SlowModeFalse", false);
                     }
-
+                    telemetry.addData("Position", follower.getPose());
                     follower.setTeleOpDrive(foward, strafe, turn, false, headingOffset_Rad);
                 },
                 //end

@@ -77,12 +77,12 @@ public abstract class RobotBase extends CommandOpMode {
 
     public void setRedAlliance() {
         vision.setPipeline(Vision.Pipeline.kRedOnly);
-        drive.setHeadingOffset(Math.toRadians(180));
+        drive.setHeadingOffset(Math.toRadians(0));
     }
 
     public void setBlueAlliance() {
         vision.setPipeline(Vision.Pipeline.kBlueOnly);
-        drive.setHeadingOffset(Math.toRadians(0));
+        drive.setHeadingOffset(Math.toRadians(180));
     }
     // Commands
 

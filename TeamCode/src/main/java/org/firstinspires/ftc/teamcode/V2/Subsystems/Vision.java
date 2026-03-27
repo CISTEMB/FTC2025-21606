@@ -27,7 +27,6 @@ public class Vision extends SubsystemBase {
     }
 
 
-
     // Hardware
 
     private final Limelight3A limelight;
@@ -61,7 +60,6 @@ public class Vision extends SubsystemBase {
         rpmLookup.add(80.0, 3375);
         rpmLookup.add(81.0, 0);
         rpmLookup.add(105, 0);
-        rpmLookup.add(106, 3515);
         rpmLookup.add(110, 3515);
         rpmLookup.add(135, 3555);
         rpmLookup.add(1000,3555);
