@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode.V2;
 import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.JoinedTelemetry;
 import com.bylazar.telemetry.PanelsTelemetry;
-import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.CommandOpMode;
 import com.seattlesolvers.solverslib.command.ConditionalCommand;
@@ -63,10 +62,10 @@ public abstract class RobotBase extends CommandOpMode {
         lights = new Lights(hardwareMap, joinedTelemetry);
 
 
-        configureButtonBindings();
+        configureCommands();
     }
 
-    protected abstract void configureButtonBindings();
+    protected abstract void configureCommands();
 
     @Override
     public void run() {
@@ -87,7 +86,10 @@ public abstract class RobotBase extends CommandOpMode {
     // Commands
 
     public Command visionAlign() {
-        return new AlignWithTargetCommand(drive, vision, joinedTelemetry);
+      return Commands.deadline(
+              new AlignWithTargetCommand(drive, vision, joinedTelemetry),
+              shooter.setRPM(2400)
+        ); 
     }
 
 

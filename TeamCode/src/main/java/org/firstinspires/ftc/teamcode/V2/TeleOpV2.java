@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.V2;
 
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
@@ -7,6 +8,7 @@ import org.firstinspires.ftc.teamcode.V2.Subsystems.Lights;
 import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 
 public abstract class TeleOpV2 extends RobotBase {
+    public static Pose startPose;
 
    @TeleOp(group = "Blue")
     public static class TeleOpBlue extends TeleOpV2 {
@@ -14,6 +16,7 @@ public abstract class TeleOpV2 extends RobotBase {
         public void initialize() {
             super.initialize();
             setBlueAlliance();
+            drive.getFollower().setPose(startPose == null ? new Pose() : startPose);
         }
     }
    @TeleOp(group = "Red")
@@ -22,10 +25,11 @@ public abstract class TeleOpV2 extends RobotBase {
         public void initialize() {
             super.initialize();
             setRedAlliance();
+            drive.getFollower().setPose(startPose == null ? new Pose() : startPose);
         }
     }
     @Override
-    protected void configureButtonBindings() {
+    protected void configureCommands() {
 
         // Defaults
 

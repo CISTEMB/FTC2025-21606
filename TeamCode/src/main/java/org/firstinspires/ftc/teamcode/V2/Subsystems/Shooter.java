@@ -38,10 +38,12 @@ public class Shooter extends SubsystemBase {
         motor1 = hw.get(DcMotorEx.class, "ShooterMotor");
         motor1.setDirection(DcMotorSimple.Direction.FORWARD);
         motor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         motor2 = hw.get(DcMotor.class, "ShooterMotor2");
         motor2.setDirection(DcMotorSimple.Direction.REVERSE);
         motor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        motor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         voltageSensor = hw.get(VoltageSensor.class, "Control Hub");
 
