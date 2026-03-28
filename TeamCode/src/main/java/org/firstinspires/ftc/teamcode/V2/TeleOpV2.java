@@ -32,6 +32,7 @@ public abstract class TeleOpV2 extends RobotBase {
         intake.setDefaultCommand(intake.in());
         drive.setDefaultCommand(drive.driveWithGamepad(gamepad1));
         lights.setDefaultCommand(lights.run(vision));
+        shooter.setDefaultCommand(shooter.setRPM(2400));
 
 
         // Gamepad 1
