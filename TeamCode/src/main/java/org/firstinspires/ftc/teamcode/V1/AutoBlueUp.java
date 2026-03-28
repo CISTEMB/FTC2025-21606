@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.V1;
 
+import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.follower;
 import static java.lang.Math.tan;
 
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -181,6 +182,7 @@ public class AutoBlueUp extends LinearOpMode {
             }
 
         }
+
         while (opModeIsActive()) {
             {
                 panelsTelemetry = PanelsTelemetry.INSTANCE.getTelemetry();

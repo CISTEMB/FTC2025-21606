@@ -37,12 +37,16 @@ android {
 }
 repositories {
     maven {
-        url "https://repo.dairy.foundation/releases"
+        url = "https://repo.dairy.foundation/releases"
     }
+    maven {
+        url = "https://repo.dairy.foundation/snapshots"
+    }
+
 }
 dependencies {
     implementation project(':FtcRobotController')
     implementation "org.solverslib:core:0.3.4"
     implementation "org.solverslib:pedroPathing:0.3.4"
-    implementation("dev.frozenmilk.sinister:Sloth:0.2.4")
+    implementation("dev.frozenmilk:Load:0.2.4")
 }

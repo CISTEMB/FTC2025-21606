@@ -1,16 +1,19 @@
 package org.firstinspires.ftc.teamcode.V2.Subsystems;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.Pose;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.FunctionalCommand;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
-import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
+
 
 public class Drive extends SubsystemBase {
     // Field Centric Constants
@@ -18,15 +21,22 @@ public class Drive extends SubsystemBase {
     //Hardware
     private final Follower follower;
     private Telemetry telemetry;
-    public Follower getFollower(){
+
+    public Follower getFollower() {
         return follower;
     }
-    private double headingOffset_Rad;
-    public void setHeadingOffset(double radians){
-        headingOffset_Rad = radians;
 
+    private double headingOffset_Rad;
+
+    public void setHeadingOffset(double radians) {
+        headingOffset_Rad = radians;
     }
-    public Drive(HardwareMap hw, Telemetry telemetry){
+
+    public void setStartPose(Pose pose) {
+        follower.setStartingPose(pose);
+    }
+
+    public Drive(HardwareMap hw, Telemetry telemetry) {
         follower = Constants.createFollower(hw);
 
         this.telemetry = telemetry;
@@ -37,14 +47,26 @@ public class Drive extends SubsystemBase {
         follower.update();
     }
 
-    public void arcadeDrive(double foward, double turn, double strafe)
-    {
+    public void arcadeDrive(double foward, double turn, double strafe) {
 
     }
 
-    public Command setForward() {
+    public Command resetForward() {
         return Commands.runOnce(() -> follower.setHeading(Math.toRadians(90))
-        );}
+        );
+    }
+
+    public Command setForwardCurrentHeading() {
+        return Commands.runOnce(() -> {
+            follower.setHeading(Math.toRadians(0));
+            headingOffset_Rad = 0;
+        });
+    }
+
+    public Command followPath(PathChain path) {
+        return new FollowPathCommand(follower, path).addRequirements(this);
+    }
+
     public Command driveWithGamepad
             (Gamepad gamepad) {
         return new FunctionalCommand(
@@ -74,11 +96,11 @@ public class Drive extends SubsystemBase {
                     follower.setTeleOpDrive(foward, strafe, turn, false, headingOffset_Rad);
                 },
                 //end
-        (interrupted) -> {
-           follower.setTeleOpDrive(0, 0, 0);
-        },
-                ()-> false,
-        this
+                (interrupted) -> {
+                    follower.setTeleOpDrive(0, 0, 0);
+                },
+                () -> false,
+                this
 
         );
     }

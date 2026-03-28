@@ -1,19 +1,21 @@
 package org.firstinspires.ftc.teamcode.V2;
 
+import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
-import org.firstinspires.ftc.teamcode.V2.Subsystems.Lights;
-import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 
 public abstract class TeleOpV2 extends RobotBase {
 
-   @TeleOp(group = "Blue")
+    public static Pose startingPose;
+
+    @TeleOp(group = "Blue")
     public static class TeleOpBlue extends TeleOpV2 {
         @Override
         public void initialize() {
             super.initialize();
             setBlueAlliance();
+            drive.setStartPose(startingPose == null ? new Pose() : startingPose);
         }
     }
    @TeleOp(group = "Red")
@@ -22,11 +24,11 @@ public abstract class TeleOpV2 extends RobotBase {
         public void initialize() {
             super.initialize();
             setRedAlliance();
+            drive.setStartPose(startingPose == null ? new Pose() : startingPose);
         }
     }
     @Override
     protected void configureButtonBindings() {
-
         // Defaults
 
         intake.setDefaultCommand(intake.in());
@@ -38,7 +40,8 @@ public abstract class TeleOpV2 extends RobotBase {
         commandGamepad1.leftBumper().whileHeld(intake.out());
 
 
-        commandGamepad1.back().whenPressed(drive.setForward());
+        commandGamepad1.back().whenPressed(drive.resetForward());
+        commandGamepad1.back().whenPressed(drive.setForwardCurrentHeading());
         // Gamepad 2
 
         commandGamepad2.a().whileHeld(visionShoot());
@@ -46,8 +49,8 @@ public abstract class TeleOpV2 extends RobotBase {
         commandGamepad2.dpadUp().whenPressed(hood.up());
         commandGamepad2.dpadDown().whenPressed(hood.down());
 
-        commandGamepad2.back().whenPressed(Commands.runOnce( ()-> setRedAlliance()));
-        commandGamepad2.start().whenPressed(Commands.runOnce( ()-> setBlueAlliance()));
+        commandGamepad2.back().whenPressed(Commands.runOnce(()-> setRedAlliance()));
+        commandGamepad2.start().whenPressed(Commands.runOnce(()-> setBlueAlliance()));
 
         // Manual Shooter control
         commandGamepad2.rightBumper().whileHeld(shooter.setRPM(-6000));
