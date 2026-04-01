@@ -22,6 +22,7 @@ public class AlignWithTargetCommand extends CommandBase {
     private final Vision vision;
     private final Telemetry telemetry;
     private boolean isAligned;
+    //private double minPower = Double.NaN;
 
 
     public AlignWithTargetCommand(Drive drive, Vision vision, Telemetry t) {
@@ -37,6 +38,7 @@ public class AlignWithTargetCommand extends CommandBase {
         drive.getFollower().startTeleopDrive();
         isAligned = false;
         onTargetDebouncer.calculate(false);
+//        minPower = Double.NaN;
     }
 
     @Override
@@ -44,9 +46,14 @@ public class AlignWithTargetCommand extends CommandBase {
         if (vision.isValid()) {
             double angle = vision.getHorizontalAngle();
             double turn = -angle * kLLP;
+            telemetry.addData("AlignWithTarget: Turn Before", turn);
+//            if (Double.isNaN(minPower)) {
+//                minPower = Math.copySign(kMinPower, turn);
+//            }
 
            //If stuck in turn
             if (Math.abs(turn) < kMinPower) {
+               // turn = minPower;
                 turn = Math.copySign(kMinPower, turn);
             }
 
