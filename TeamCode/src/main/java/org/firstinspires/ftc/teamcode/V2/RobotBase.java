@@ -106,7 +106,7 @@ public abstract class RobotBase extends CommandOpMode {
                 }),
                 new RepeatCommand(
                         Commands.race(
-                                shooter.setRPM(() -> latchedRPM),
+                                shooter.setRPM(() -> vision.getShooterRPM()),
                                 new ConditionalCommand(
                                         hood.up(),
                                         hood.down(),

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 
 @Configurable
 public class AlignWithTargetCommand extends CommandBase {
-    public static double kLLP = 0.03;
+    public static double kLLP = 0.015;
     public static double kMinPower = 0.1;
     public static double kDebouncerSeconds = 0.25;
 
