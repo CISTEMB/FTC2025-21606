@@ -14,8 +14,9 @@ import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 public class AlignWithTargetCommand extends CommandBase {
     public static double kLLP = 0.03;
     public static double kMinPower = 0.1;
+    public static double kDebouncerSeconds = 0.25;
 
-    private final Debouncer onTargetDebouncer = new Debouncer(1*1000, Debouncer.DebounceType.Both);
+    private final Debouncer onTargetDebouncer = new Debouncer(kDebouncerSeconds*1000, Debouncer.DebounceType.Both);
 
     private final Drive drive;
     private final Vision vision;
@@ -57,6 +58,7 @@ public class AlignWithTargetCommand extends CommandBase {
         }
         isAligned = onTargetDebouncer.calculate(vision.isAligned());
         telemetry.addData("AlignWithTarget: isAligned", isAligned);
+        telemetry.addData("AlignWithTarget: P ", kLLP);
     }
 
     @Override

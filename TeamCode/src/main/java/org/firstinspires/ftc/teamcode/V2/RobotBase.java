@@ -35,7 +35,7 @@ public abstract class RobotBase extends CommandOpMode {
     protected Lights lights;
 
 
-    //OI
+    //Operator Interface
     protected CommandGamepad commandGamepad1;
     protected CommandGamepad commandGamepad2;
 
@@ -86,10 +86,10 @@ public abstract class RobotBase extends CommandOpMode {
     // Commands
 
     public Command visionAlign() {
-      return Commands.deadline(
-              new AlignWithTargetCommand(drive, vision, joinedTelemetry),
-              shooter.setRPM(2400)
-        ); 
+        return Commands.deadline(
+                new AlignWithTargetCommand(drive, vision, joinedTelemetry),
+                shooter.setRPM(2400)
+        );
     }
 
 
@@ -115,13 +115,12 @@ public abstract class RobotBase extends CommandOpMode {
                                 Commands.sequence(
                                         Commands.waitUntil(() -> shooter.isAtGoalRPM()),
                                         Commands.parallel(
-                                            intake.feed(),
-                                            feeder.in()
-                                        ).interruptOn(()-> shooter.hasShoot())
+                                                intake.feed(),
+                                                feeder.in()
+                                        ).interruptOn(() -> shooter.hasShoot())
                                 )
                         )
                 )
         );
-
     }
 }
