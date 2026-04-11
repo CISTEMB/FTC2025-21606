@@ -37,7 +37,7 @@ public class Intake extends SubsystemBase {
 
     public Command in() {
         return Commands.runEnd(() -> {
-                    motor1.setPower(0.8);
+                    motor1.setPower(0.6);
                     motor2.setPower(0.8);
                 }, () -> {
                     motor1.setPower(0.0);
@@ -49,8 +49,8 @@ public class Intake extends SubsystemBase {
 
     public Command feed() {
         return Commands.runEnd(() -> {
-                    motor1.setPower(0.6);
-                    motor2.setPower(0.6);
+                    motor1.setPower(0.8);
+                    motor2.setPower(0.2);
                 }, () -> {
                     motor1.setPower(0.0);
                     motor2.setPower(0.0);

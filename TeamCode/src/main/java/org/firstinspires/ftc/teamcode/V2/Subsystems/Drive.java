@@ -49,7 +49,7 @@ public class Drive extends SubsystemBase {
         return new FunctionalCommand(
                 //init
                 () -> follower.startTeleOpDrive(),
-                //excuete
+                //execute
                 () -> {
                     double foward = -gamepad.left_stick_y;
                     double strafe = -gamepad.left_stick_x;
@@ -61,7 +61,7 @@ public class Drive extends SubsystemBase {
                     turn *= Math.abs(turn);
 
 
-                    if (gamepad.right_trigger > 0.5) {
+                    if (gamepad.right_trigger_pressed) {
                         foward *= 0.25;
                         strafe *= 0.25;
                         turn *= 0.25;
