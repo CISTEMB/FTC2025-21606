@@ -1,15 +1,18 @@
 package org.firstinspires.ftc.teamcode.V2.Subsystems;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.seattlesolvers.solverslib.command.Command;
 import com.seattlesolvers.solverslib.command.FunctionalCommand;
 import com.seattlesolvers.solverslib.command.SubsystemBase;
+import com.seattlesolvers.solverslib.pedroCommand.FollowPathCommand;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
 import org.firstinspires.ftc.teamcode.pedroPathing.Constants;
+import org.firstinspires.ftc.teamcode.pedroPathing.Drawing;
 
 public class Drive extends SubsystemBase {
     // Field Centric Constants
@@ -34,6 +37,7 @@ public class Drive extends SubsystemBase {
     @Override
     public void periodic() {
         follower.update();
+        Drawing.drawDebug(follower);
     }
 
     public void arcadeDrive(double foward, double turn, double strafe)
@@ -44,6 +48,9 @@ public class Drive extends SubsystemBase {
     public Command setForward() {
         return Commands.runOnce(() -> follower.setHeading(Math.toRadians(90))
         );}
+    public Command follow(PathChain pathChain) {
+        return new FollowPathCommand(this.getFollower(), pathChain).addRequirements(this);
+    }
     public Command driveWithGamepad
             (Gamepad gamepad) {
         return new FunctionalCommand(
