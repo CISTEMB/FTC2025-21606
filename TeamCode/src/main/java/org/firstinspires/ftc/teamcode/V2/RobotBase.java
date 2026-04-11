@@ -24,6 +24,7 @@ import org.firstinspires.ftc.teamcode.V2.Subsystems.Lights;
 @Configurable
 public abstract class RobotBase extends CommandOpMode {
 
+    protected  boolean isRed = false;
 
     //Subsystems
     protected Vision vision;
@@ -77,11 +78,13 @@ public abstract class RobotBase extends CommandOpMode {
     public void setRedAlliance() {
         vision.setPipeline(Vision.Pipeline.kRedOnly);
         drive.setHeadingOffset(Math.toRadians(0));
+        isRed = true;
     }
 
     public void setBlueAlliance() {
         vision.setPipeline(Vision.Pipeline.kBlueOnly);
         drive.setHeadingOffset(Math.toRadians(180));
+        isRed = false;
     }
     // Commands
 

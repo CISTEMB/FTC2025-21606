@@ -18,6 +18,7 @@ public abstract class AutoBack extends AutoBase {
     public static class AutoRedBack extends AutoBack {
         @Override
         public void initialize() {
+            isRed = true;
             super.initialize();
             setRedAlliance();
         }
@@ -27,34 +28,39 @@ public abstract class AutoBack extends AutoBase {
     public static class AutoBlueBack extends AutoBack {
         @Override
         public void initialize() {
+            isRed = false;
             super.initialize();
             setBlueAlliance();
         }
     }
+
+
 
     @Override
     protected void configureCommands() {
         Follower follower = drive.getFollower();
         PathChain drivetoShoot;
         PathChain driveAway;
-        Pose startpose = new Pose(57.146, 8.196, Math.toRadians(90));
+
+        // Note these points are assuming the robot is on the blue side.
+        Pose startpose = flipPose(57.146, 8.196, 90);
         drivetoShoot = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(
                                 startpose,
-                                new Pose(57.806, 18.558),
-                                new Pose(66.065, 9.630)
+                                flipPose(57.806, 18.558),
+                                flipPose(66.065, 9.630)
                         )
                 )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(120))
+                .setLinearHeadingInterpolation(flipAngle(90), flipAngle(120))
                 .build();
 
         driveAway = follower.pathBuilder()
                 .addPath(
                         new BezierCurve(
-                                new Pose(66.065, 9.630),
-                                new Pose(61.844, 36.083),
-                                new Pose(41.513, 36.767)
+                                flipPose(66.065, 9.630),
+                                flipPose(61.844, 36.083),
+                                flipPose(41.513, 36.767)
                         )
                 )
                 .setTangentHeadingInterpolation()
