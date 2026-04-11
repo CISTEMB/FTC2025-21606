@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.V2;
 
+import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.Path;
@@ -31,21 +32,34 @@ public abstract class AutoBack extends AutoBase{
 
     @Override
     protected void configureCommands() {
-        Pose startpose = new Pose(63.641, 8.196, Math.toRadians(90));
-        PathChain path1 = drive.getFollower().pathBuilder()
+        Follower follower = drive.getFollower();
+
+        Pose startpose = new Pose(57.146, 8.196, Math.toRadians(90));
+        PathChain drivetoShoot = follower.pathBuilder()
                 .addPath(
                         new BezierLine(
                                 startpose,
-                                new Pose(59.918, 17.388)
+                                new Pose(62.482, 13.437)
                         )
                 )
                 .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(120))
                 .build();
-        drive.getFollower().setStartingPose(startpose);
 
+       PathChain driveAway = follower.pathBuilder()
+                .addPath(
+                        new BezierLine(
+                                new Pose(62.482, 13.437),
+                                new Pose(58.981, 42.589)
+                        )
+                )
+                .setTangentHeadingInterpolation()
+                .build();
+
+    drive.getFollower().setStartingPose(startpose);
     schedule(Commands.sequence(
-       drive.follow(path1),
-       visionShoot()
+        drive.follow(drivetoShoot),
+        visionShoot().withTimeout(10*1000),
+        drive.follow(driveAway)
     ));
     }
 }
