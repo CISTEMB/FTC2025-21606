@@ -40,7 +40,7 @@ public class Drive extends SubsystemBase {
         Drawing.drawDebug(follower);
     }
 
-    public void arcadeDrive(double foward, double turn, double strafe)
+    public void arcadeDrive(double forward, double turn, double strafe)
     {
 
     }
@@ -58,26 +58,26 @@ public class Drive extends SubsystemBase {
                 () -> follower.startTeleOpDrive(),
                 //execute
                 () -> {
-                    double foward = -gamepad.left_stick_y;
+                    double forward = -gamepad.left_stick_y;
                     double strafe = -gamepad.left_stick_x;
                     double turn = -gamepad.right_stick_x;
 
 
-                    foward *= Math.abs(foward);
+                    forward *= Math.abs(forward);
                     strafe *= Math.abs(strafe);
                     turn *= Math.abs(turn);
 
 
-                    if (gamepad.right_trigger_pressed) {
-                        foward *= 0.25;
+                    if (gamepad.right_trigger > 5) {
+                        forward *= 0.25;
                         strafe *= 0.25;
-                        turn *= 0.25;
+                        turn *= 0.15;
                         telemetry.addData("Drive: SlowModeTrue", true);
                     } else {
                         telemetry.addData("Drive: SlowModeFalse", false);
                     }
                     telemetry.addData("Position", follower.getPose());
-                    follower.setTeleOpDrive(foward, strafe, turn, false, headingOffset_Rad);
+                    follower.setTeleOpDrive(forward, strafe, turn, false, headingOffset_Rad);
                 },
                 //end
         (interrupted) -> {

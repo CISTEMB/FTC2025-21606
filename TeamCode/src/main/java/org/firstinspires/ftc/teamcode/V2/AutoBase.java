@@ -6,7 +6,12 @@ public abstract class AutoBase extends RobotBase{
     @Override
     public void run() {
         super.run();
-        TeleOpV2.startPose = drive.getFollower().getPose();
+
+
+        Pose pose = drive.getFollower().getPose();
+        if (!pose.roughlyEquals(new Pose(), 0.1)) {
+            TeleOpV2.startPose = pose;
+        }
     }
 
     public Pose flipPose(Pose pose)  {

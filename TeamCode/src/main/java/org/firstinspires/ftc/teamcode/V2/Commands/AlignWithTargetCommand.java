@@ -12,6 +12,9 @@ import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
 
 @Configurable
 public class AlignWithTargetCommand extends CommandBase {
+
+    public static double kShooterOffset = 0;
+
     public static double kLLP = 0.015;
     public static double kMinPower = 0.1;
     public static double kDebouncerSeconds = 0.25;
@@ -44,7 +47,7 @@ public class AlignWithTargetCommand extends CommandBase {
     @Override
     public void execute() {
         if (vision.isValid()) {
-            double angle = vision.getHorizontalAngle();
+            double angle = vision.getHorizontalAngle() + kShooterOffset;
             double turn = -angle * kLLP;
             telemetry.addData("AlignWithTarget: Turn Before", turn);
 //            if (Double.isNaN(minPower)) {

@@ -4,8 +4,7 @@ import com.pedropathing.geometry.Pose;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
-import org.firstinspires.ftc.teamcode.V2.Subsystems.Lights;
-import org.firstinspires.ftc.teamcode.V2.Subsystems.Vision;
+
 
 public abstract class TeleOpV2 extends RobotBase {
     public static Pose startPose;
@@ -40,13 +39,14 @@ public abstract class TeleOpV2 extends RobotBase {
 
 
         // Gamepad 1
-        commandGamepad1.leftBumper().whileHeld(intake.out());
-
+        commandGamepad1.leftBumper().whileHeld(IntakeOut());
+        commandGamepad1.rightBumper().whileHeld(visionShoot());
 
         commandGamepad1.back().whenPressed(drive.setForward());
+
         // Gamepad 2
 
-        commandGamepad2.a().whileHeld(visionShoot());
+//        commandGamepad2.a().whileHeld(visionShoot());
 
         commandGamepad2.dpadUp().whenPressed(hood.up());
         commandGamepad2.dpadDown().whenPressed(hood.down());
@@ -59,6 +59,4 @@ public abstract class TeleOpV2 extends RobotBase {
         commandGamepad2.leftBumper().whileHeld(shooter.setRPM(3515));
         commandGamepad2.x().whileHeld(feeder.in());
     }
-
-
 }

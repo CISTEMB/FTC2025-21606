@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.V2.Subsystems.Lights;
 @Configurable
 public abstract class RobotBase extends CommandOpMode {
 
-    protected  boolean isRed = false;
+    protected boolean isRed = false;
 
     //Subsystems
     protected Vision vision;
@@ -46,6 +46,8 @@ public abstract class RobotBase extends CommandOpMode {
 
     @Override
     public void initialize() {
+        AlignWithTargetCommand.kShooterOffset = 0;
+
         commandGamepad1 = new CommandGamepad(gamepad1);
         commandGamepad2 = new CommandGamepad(gamepad2);
 
@@ -79,12 +81,14 @@ public abstract class RobotBase extends CommandOpMode {
         vision.setPipeline(Vision.Pipeline.kRedOnly);
         drive.setHeadingOffset(Math.toRadians(0));
         isRed = true;
+        AlignWithTargetCommand.kShooterOffset = -2;
     }
 
     public void setBlueAlliance() {
         vision.setPipeline(Vision.Pipeline.kBlueOnly);
         drive.setHeadingOffset(Math.toRadians(180));
         isRed = false;
+        AlignWithTargetCommand.kShooterOffset = 0;
     }
     // Commands
 
@@ -93,6 +97,12 @@ public abstract class RobotBase extends CommandOpMode {
                 new AlignWithTargetCommand(drive, vision, joinedTelemetry),
                 shooter.setRPM(2400)
         );
+    }
+
+    public Command IntakeOut() {
+        return Commands.parallel(
+                intake.out(),
+                feeder.out());
     }
 
 
@@ -107,20 +117,34 @@ public abstract class RobotBase extends CommandOpMode {
                     latchedDistance = vision.getTargetDistance();
                     latchedRPM = vision.getShooterRPM();
                 }),
-                new RepeatCommand(
-                        Commands.race(
-                                shooter.setRPM(() -> vision.getShooterRPM()),
-                                new ConditionalCommand(
-                                        hood.up(),
-                                        hood.down(),
-                                        () -> latchedDistance > 110
-                                ),
-                                Commands.sequence(
-                                        Commands.waitUntil(() -> shooter.isAtGoalRPM()),
-                                        Commands.parallel(
-                                                intake.feed(),
-                                                feeder.in()
-                                        ).interruptOn(() -> shooter.hasShoot())
+
+                Commands.race(
+                        shooter.setRPM(() -> {
+                            double rpm = vision.getShooterRPM();
+                            if (rpm < 0.1) {
+                                return latchedRPM;
+                            }
+
+                            latchedRPM = rpm;
+                            return latchedRPM;
+                        }),
+
+
+                        new RepeatCommand(
+                                Commands.race(
+
+                                        new ConditionalCommand(
+                                                hood.up(),
+                                                hood.down(),
+                                                () -> latchedDistance > 110
+                                        ),
+                                        Commands.sequence(
+                                                Commands.waitUntil(() -> shooter.isAtGoalRPM()),
+                                                Commands.parallel(
+                                                        intake.feed(),
+                                                        feeder.in()
+                                                ).interruptOn(() -> shooter.hasShoot())
+                                        )
                                 )
                         )
                 )

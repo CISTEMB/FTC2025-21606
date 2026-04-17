@@ -96,7 +96,7 @@ public class Shooter extends SubsystemBase {
         percentError = (goalRPM - encoderRPM) / goalRPM;
         double pidVolts = 0;
         pidVolts += pidVolts + kStP * pidError;
-        ;
+
 
         double outputVolt = ffVolts + pidVolts;
         double outputPercent = outputVolt / batteryVolt;
