@@ -48,15 +48,15 @@ public class Vision extends SubsystemBase {
         // Lookup values
         rpmLookup.add(-100,0);
         rpmLookup.add(0, 0);
-        rpmLookup.add(23.2, 2400);
-        rpmLookup.add(29.5, 2650);
-        rpmLookup.add(41.4, 2915);
+        rpmLookup.add(23.2, 2300);
+        rpmLookup.add(29.5, 2550);
+        rpmLookup.add(41.4, 2815);
         rpmLookup.add(52.7, 3150);
         rpmLookup.add(58.6, 3200);
-        rpmLookup.add(65.3, 3315);
-        rpmLookup.add(71.6, 3400);
-        rpmLookup.add(77.8, 3475);
-        rpmLookup.add(80.0, 3475);
+        rpmLookup.add(65.3, 3215);
+        rpmLookup.add(71.6, 3300);
+        rpmLookup.add(77.8, 3375);
+        rpmLookup.add(80.0, 3375);
         rpmLookup.add(81.0, 0);
         rpmLookup.add(105, 0);
         rpmLookup.add(110, 3515);
