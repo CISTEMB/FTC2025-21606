@@ -12,8 +12,8 @@ import org.firstinspires.ftc.teamcode.V2.Libs.Commands;
 @Configurable
 public class Hood extends SubsystemBase {
     //constants
-    public static  final double kDownPose = 0;
-    public static  final double kUpPose = 0.35; //5 teeth
+    public static final double kDownPose = 0;
+    public static final double kUpPose = 0.35; //5 teeth
 
     //Hardware
     private final Servo servo;
@@ -23,7 +23,6 @@ public class Hood extends SubsystemBase {
 
     public Hood(HardwareMap hw, Telemetry telemetry) {
         servo = hw.get(Servo.class, "HoodMotor");
-
 
 
         this.telemetry = telemetry;
@@ -38,6 +37,7 @@ public class Hood extends SubsystemBase {
 
         );
     }
+
     public Command down() {
         return Commands.run(
                 () -> servo.setPosition(kDownPose),

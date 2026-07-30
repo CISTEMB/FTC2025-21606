@@ -25,18 +25,18 @@ public class Lights extends SubsystemBase {
 
     public Command run(Vision vision) {
         return Commands.run(() -> {
-            int pipeline = vision.pipeline();
-            if (vision.isValid() && pipeline == Vision.Pipeline.kRedOnly.pipeline){
-                left.set(GoBildaRGBIndicator.Color.Red);
-                right.set(GoBildaRGBIndicator.Color.Red);
-            } else if (vision.isValid() && pipeline == Vision.Pipeline.kBlueOnly.pipeline){
-                left.set(GoBildaRGBIndicator.Color.Blue);
-                right.set(GoBildaRGBIndicator.Color.Blue);
-            } else {
-                left.set(GoBildaRGBIndicator.Color.Off);
-                right.set(GoBildaRGBIndicator.Color.Off);
-            }
-        },
+                    int pipeline = vision.pipeline();
+                    if (vision.isValid() && pipeline == Vision.Pipeline.kRedOnly.pipeline) {
+                        left.set(GoBildaRGBIndicator.Color.Red);
+                        right.set(GoBildaRGBIndicator.Color.Red);
+                    } else if (vision.isValid() && pipeline == Vision.Pipeline.kBlueOnly.pipeline) {
+                        left.set(GoBildaRGBIndicator.Color.Blue);
+                        right.set(GoBildaRGBIndicator.Color.Blue);
+                    } else {
+                        left.set(GoBildaRGBIndicator.Color.Off);
+                        right.set(GoBildaRGBIndicator.Color.Off);
+                    }
+                },
                 this
         );
 

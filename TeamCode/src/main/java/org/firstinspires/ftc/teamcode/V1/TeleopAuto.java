@@ -77,6 +77,7 @@ public class TeleopAuto extends LinearOpMode {
     private double shooterPercentError;
     private double LatchedLLDistance;
     GoBildaPinpointDriver odo;
+
     //TelemetryManager set to Panels
     TelemetryManager panelsTelemetry;
     @Override
@@ -122,7 +123,8 @@ public class TeleopAuto extends LinearOpMode {
             RPMlut.add(81.0, 0);
             RPMlut.add(105, 0);
             RPMlut.add(110, 3515);
-            RPMlut.add(135, 3555);
+            RPMlut.add(125, 3535);
+            RPMlut.add(135, 3575);
             RPMlut.add(1000,3555);
 
             RPMlut.createLUT();
@@ -266,7 +268,7 @@ public class TeleopAuto extends LinearOpMode {
 
                             break;
                     }
-            //Chasis driver Control
+            //Chassis driver Control
             if (!gamepad2.a) {
                 autoShootState = AutoShootState.kIdle;
 
@@ -330,7 +332,6 @@ public class TeleopAuto extends LinearOpMode {
             shooterPercentError = (GoalRPM - EncoderRPM) / GoalRPM;
             double pidVolts = 0;
             pidVolts += pidVolts + kStP * pidError;
-            ;
 
             double outputVolt = FFVolts + pidVolts;
             double outputPercent = outputVolt / batteryVolt;

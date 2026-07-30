@@ -20,8 +20,6 @@ public class Feeder extends SubsystemBase {
         servo = hw.get(CRServo.class, "FeederMotor");
 
 
-
-
         this.telemetry = telemetry;
 
     }
@@ -33,6 +31,7 @@ public class Feeder extends SubsystemBase {
                 this
         );
     }
+
     public Command out() {
         return Commands.runEnd(
                 () -> servo.setPower(-1),
