@@ -33,7 +33,7 @@ public class Vision extends SubsystemBase {
 
     // State
 
-    private final InterpLUT rpmLookup = new InterpLUT();
+    private final InterpLUT RPMlut = new InterpLUT();
     private LLResult lastResult;
     private final Telemetry telemetry;
 
@@ -46,24 +46,25 @@ public class Vision extends SubsystemBase {
         limelight.pipelineSwitch(Pipeline.kBoth.pipeline);
 
         // Lookup values
-        rpmLookup.add(-100,0);
-        rpmLookup.add(0, 0);
-        rpmLookup.add(23.2, 2300);
-        rpmLookup.add(29.5, 2550);
-        rpmLookup.add(41.4, 2750);
-        rpmLookup.add(52.7, 3125);
-        rpmLookup.add(58.6, 3175);
-        rpmLookup.add(65.3, 3215);
-        rpmLookup.add(71.6, 3250);
-        rpmLookup.add(77.8, 3325);
-        rpmLookup.add(80.0, 3325);
-        rpmLookup.add(81.0, 0);
-        rpmLookup.add(105, 0);
-        rpmLookup.add(110, 3515);
-        rpmLookup.add(135, 3555);
-        rpmLookup.add(1000,3555);
+        RPMlut.add(-100,0);
+        RPMlut.add(0, 0);
+        RPMlut.add(23.6, 2500);
+        RPMlut.add(29.9, 2525);
+        RPMlut.add(36.2, 2550);
+        RPMlut.add(52.7, 2575);
+        RPMlut.add(58.6, 2580);
+        RPMlut.add(65.3, 2595);
+        RPMlut.add(71.6, 2625);
+        RPMlut.add(77.8, 2785);
+        RPMlut.add(80.0, 2835);
+        RPMlut.add(81.0, 0);
+        RPMlut.add(105, 0);
+        RPMlut.add(110, 3505);
+        RPMlut.add(125, 3515);
+        RPMlut.add(135, 3545);
+        RPMlut.add(1000,3555);
 
-        rpmLookup.createLUT();
+        RPMlut.createLUT();
         this.telemetry = telemetry;
     }
 
@@ -108,7 +109,7 @@ public class Vision extends SubsystemBase {
 
         if (isValid()) {
             if (0<=distance && distance<=150) {
-                return rpmLookup.get(distance);
+                return RPMlut.get(distance);
             }
         }
 

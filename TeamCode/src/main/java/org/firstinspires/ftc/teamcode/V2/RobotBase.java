@@ -136,7 +136,7 @@ public abstract class RobotBase extends CommandOpMode {
                                         new ConditionalCommand(
                                                 hood.up(),
                                                 hood.down(),
-                                                () -> latchedDistance > 110
+                                                () -> latchedDistance > 24
                                         ),
                                         Commands.sequence(
                                                 Commands.waitUntil(() -> shooter.isAtGoalRPM()),
